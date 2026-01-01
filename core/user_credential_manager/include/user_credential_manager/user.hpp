@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <array>
 
 namespace UserCredential
 {
@@ -21,6 +22,8 @@ class User{
 
         User(std::string_view name);
 
+        User & operator=(const User & u) = default;
+
         ~User();
 
         bool ChangePassword(std::string_view newPassword);
@@ -29,44 +32,25 @@ class User{
 
         bool VerifyPassword(std::string_view password);
 
+        static bool IsUserExisting(std::string_view name);
+
     private:
 
         struct Data{
-            char name[MAX_USERNAME_SIZE];
-            char password[MAX_PASSWORD_SIZE];
-            int level;
+            private:
+                std::array<char, MAX_USERNAME_SIZE> name;
+                std::array<char, MAX_PASSWORD_SIZE> password;
+                int level;
+            public:
+                Data() = default;
+                Data & SetPassword(std::string_view newPassword);
+                Data & SetLevel(int level);
+                Data & SetName(std::string_view newName);
+                Data & operator=(const Data & d) = default;
+                std::string_view GetName() const;
+                std::string_view GetPassword() const;
+        }; 
 
-            Data() = default;
-
-            Data(std::string_view name, std::string_view password, int level)
-            {
-                size_t min = MAX_USERNAME_SIZE - 1 < name.size() ? name.size() : MAX_USERNAME_SIZE - 1;
-                strncpy(this->name, name.data(), min);
-                this->name[min + 1] = '\0';
-
-                min = MAX_PASSWORD_SIZE - 1 < password.size() ? password.size() : MAX_PASSWORD_SIZE - 1;
-                strncpy(this->password, password.data(), min);
-                this->password[min + 1] = '\0';
-
-                this->level = level;
-            }
-
-
-            Data & operator=(Data & data){
-                size_t min = MAX_USERNAME_SIZE - 1 < strnlen(data.name, MAX_USERNAME_SIZE) ? strnlen(data.name, MAX_USERNAME_SIZE) : MAX_USERNAME_SIZE - 1;
-                strncpy(this->name, data.name, min);
-                name[min + 1] = '\0';
-
-                min = MAX_PASSWORD_SIZE - 1 < strnlen(data.password, MAX_USERNAME_SIZE) ? strnlen(data.password, MAX_USERNAME_SIZE): MAX_PASSWORD_SIZE - 1;
-                strncpy(this->password, data.password, min);
-                password[min + 1] = '\0';
-
-                this->level = data.level;
-
-                return *this;
-            }
-
-        };
         
         Data m_CachedData;
 
