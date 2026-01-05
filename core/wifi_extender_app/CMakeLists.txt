@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.16)
+
+idf_component_register(
+                        SRCS  "./src/wifi_extender_app.cpp"
+                              "./src/model.cpp"
+                              "./src/network_status_led.cpp"
+                        INCLUDE_DIRS "./include"
+                        REQUIRES    wifi_extender_if
+                                    wifi_extender_espidf_impl
+                                    rgbled_if
+                                    rgbled_sk68xxminihs
+                                    data_storer_if
+                                    data_storer_nvs_impl         
+                                    mongoose
+                                    user_credential_manager
+                    )

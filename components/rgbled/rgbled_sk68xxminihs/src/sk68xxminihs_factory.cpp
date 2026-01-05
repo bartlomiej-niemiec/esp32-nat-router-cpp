@@ -14,26 +14,16 @@ RgbLedFactory & RgbLedFactory::GetInstance()
 }
 
 
-RgbLedIf * RgbLedFactory::Create(const uint32_t gpio_pin_num)
+std::unique_ptr<RgbLedIf> RgbLedFactory::Create(const uint32_t gpio_pin_num)
 {
-    std::unordered_map<uint32_t, RgbLedIf *>::iterator it;
-    it = m_RgbLedIfMap.find(gpio_pin_num);
-    RgbLedIf * pRgbLedIf = it->second;
+    auto it = m_RgbLedIfMap.find(gpio_pin_num);
     if (it == m_RgbLedIfMap.end())
     {
-        pRgbLedIf = new (std::nothrow) Sk68xxminiHsImpl(gpio_pin_num);
-        assert(nullptr != pRgbLedIf);
-        m_RgbLedIfMap[gpio_pin_num] = pRgbLedIf;
+        m_RgbLedIfMap[gpio_pin_num] = true;
+        return std::make_unique<Sk68xxminiHsImpl>(gpio_pin_num);
     }
 
-    return pRgbLedIf;
-}
-
-RgbLedIf * RgbLedFactory::Get(const uint32_t gpio_pin_num)
-{
-    std::unordered_map<uint32_t, RgbLedIf *>::iterator it;
-    it = m_RgbLedIfMap.find(gpio_pin_num);
-    return it->second;
+    return nullptr;
 }
 
 

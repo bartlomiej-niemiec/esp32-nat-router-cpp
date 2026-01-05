@@ -10,9 +10,9 @@ set(EXTRA_COMPONENT_DIRS
     ${CMAKE_SOURCE_DIR}/components/wifi_extender/wifi_extender_if
     ${CMAKE_SOURCE_DIR}/components/wifi_extender/wifi_extender_espidf_impl
     ${CMAKE_SOURCE_DIR}/components/rgbled/rgbled_if
-    ${CMAKE_SOURCE_DIR}/components/rgbled/rgbled_sk68xxminihs
     ${CMAKE_SOURCE_DIR}/components/data_storer/data_storer_if
     ${CMAKE_SOURCE_DIR}/core/user_credential_manager
+    ${CMAKE_SOURCE_DIR}/core/wifi_extender_app
 )
 
 if("${DataStorerImpl}" STREQUAL "Nvs")
@@ -21,6 +21,9 @@ if("${DataStorerImpl}" STREQUAL "Nvs")
     )
 endif()
 
+list(APPEND EXTRA_COMPONENT_DIRS
+    ${CMAKE_SOURCE_DIR}/components/rgbled/rgbled_sk68xxminihs
+)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(wifi_extender)

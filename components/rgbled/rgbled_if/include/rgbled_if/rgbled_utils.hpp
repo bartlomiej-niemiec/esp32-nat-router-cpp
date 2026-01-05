@@ -56,11 +56,12 @@ class RgbColorCreator{
             return RgbColor();
         }
 
-        static constexpr void FillColorArray(std::array<RgbColor, static_cast<int>(Color::COLOR_COUNT)> & colorArr)
+        template <size_t N>
+        static constexpr void FillColorArray(std::array<RgbColor, N> & rgbColorArr, std::array<Color, N> & colorArr)
         {
-            for (int i = 0; i != static_cast<int>(Color::COLOR_COUNT); i++)
+            for (int i = 0; i < N; i++)
             {
-                colorArr[i] = Create(static_cast<Color>(i));
+                rgbColorArr[i] = Create(colorArr[i]);
             }
         }
 

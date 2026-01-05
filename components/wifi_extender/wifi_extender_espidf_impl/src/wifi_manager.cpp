@@ -177,8 +177,6 @@ WifiManager::WifiManager():
     m_ReconnectCounterVal(0),
     m_StaConnectionTimer(nullptr)
 {
-
-    assert(esp_timer_init() != ESP_ERR_NO_MEM );
     esp_timer_create_args_t timerStaArgs;
     timerStaArgs.callback = RetryConnectToNetwork;
     timerStaArgs.arg = this;
@@ -254,7 +252,7 @@ bool WifiManager::TryToReconnect()
 bool WifiManager::RegisterListener(EventListener * pEventListener)
 {
     assert(pEventListener != nullptr);
-    m_WifiExtenderStateListeners.emplace_back(pEventListener);
+    m_WifiExtenderStateListeners.push_back(pEventListener);
     return true;
 }
 

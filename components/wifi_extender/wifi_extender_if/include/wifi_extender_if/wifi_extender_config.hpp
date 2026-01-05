@@ -15,7 +15,8 @@ enum class WifiExtenderState : uint8_t {
     RUNNING,
     STOPPING,
     NEW_CONFIGURATION_PENDING,
-    STA_CANNOT_CONNECT
+    STA_CANNOT_CONNECT,
+    STATE_COUNT /// Must be last 
 };
 
 struct AccessPointConfig {
@@ -127,6 +128,12 @@ public:
             case WifiExtenderState::NEW_CONFIGURATION_PENDING:
             {
                 return "WifiExtender new configuration pending...";
+            }
+            break;
+
+            case WifiExtenderState::STATE_COUNT:
+            {
+                return "Last State - should not be use in app code";
             }
             break;
         };
