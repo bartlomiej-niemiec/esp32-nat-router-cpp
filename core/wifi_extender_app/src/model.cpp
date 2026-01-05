@@ -15,39 +15,26 @@ static constexpr int MONGOOSE_TASK_STACK_SIZE = 4096 * 2;
 static constexpr int MONGOOSE_TASK_PRIO = 3;
 static TaskHandle_t m_MongooseTaskHandle = nullptr;
 
+int my_glue_authenticate(const char *user, const char *pass) {
+    ESP_LOGI("MONGOOSE", "User: %s, Password: %s", user, pass);
+    int level = 0; // Authentication failure
+    if (strcmp(user, "admin") == 0 && strcmp(pass, "admin") == 0) {
+        level = 7;  // Administrator
+    } else if (strcmp(user, "user") == 0 && strcmp(pass, "user") == 0) {
+        level = 3;  // Ordinary dude
+    }
+    return level;
+}
+
 static void run_mongoose(void *pArg) {
     ESP_LOGI("MONGOOSE", "run_mongoose started");
     mongoose_init();
+    mongoose_set_auth_handler(my_glue_authenticate);
     mg_log_set(MG_LL_DEBUG);  // Set log level to debug
     for (;;) {                // Infinite event loop
         mongoose_poll();   // Process network events
     }
 }
-
-class DispatchEventListener:
-    public WifiExtender::EventListener
-{
-    public:
-
-        void Callback(WifiExtender::WifiExtenderState event) override
-        {
-            ESP_LOGI("WifiExtender", "State: %s", WifiExtender::WifiExtenderHelpers::WifiExtenderStaToString(event).data());
-            if ((event == WifiExtender::WifiExtenderState::CONNECTING ||
-                event == WifiExtender::WifiExtenderState::RUNNING) && !isMongooseRunning)
-            {
-                xTaskCreate(
-                    run_mongoose,
-                    m_pTaskName,
-                    MONGOOSE_TASK_STACK_SIZE,
-                    nullptr,
-                    MONGOOSE_TASK_PRIO,
-                    &m_MongooseTaskHandle
-                );
-                assert(nullptr != m_MongooseTaskHandle);
-                isMongooseRunning = true;
-            }
-        }
-};
 
 void Model::Startup()
 {
@@ -71,17 +58,44 @@ void Model::Startup()
     WifiExtenderConfig config(apConfig, staConfig);
     pWifiExtender = &WifiExtenderFactory::GetInstance().GetWifiExtender();
     pWifiScannerIf = pWifiExtender->GetScanner();
-    static DispatchEventListener logEventListener;
-    pWifiExtender->RegisterListener(&logEventListener);
+   
     if (ESP32TARGET_S3)
     {
         m_Led = new (std::nothrow) NetworkStatusLed::NetworkStatusLed(GPIO_LED_ESP32S3);
-        m_WifiListenerLed = new (std::nothrow) NetworkStatusLed::NetworkLedEventListener(m_Led);
-        pWifiExtender->RegisterListener(m_WifiListenerLed);
     }
+
+    m_WifiExtenderEventQueue = xQueueCreate(WIFI_EXTENDER_QUEUE_SIZE, sizeof(WifiExtender::WifiExtenderState));
+    assert(nullptr != m_WifiExtenderEventQueue);
+    static DispatchEventListener logEventListener(m_WifiExtenderEventQueue);
+    pWifiExtender->RegisterListener(&logEventListener);
+
     pWifiExtender->Startup(config);
+    WifiExtender::WifiExtenderState state;
+
     while(true)
-    { 
-        vTaskDelay(pdMS_TO_TICKS(1500));
+    {
+        if (xQueueReceive(
+            m_WifiExtenderEventQueue,
+            &state,
+            portMAX_DELAY
+            ) == pdTRUE )
+        {
+            m_Led->Update(state);
+            if ((state == WifiExtender::WifiExtenderState::CONNECTING ||
+                state == WifiExtender::WifiExtenderState::RUNNING) && !isMongooseRunning)
+            {
+                xTaskCreate(
+                    run_mongoose,
+                    m_pTaskName,
+                    MONGOOSE_TASK_STACK_SIZE,
+                    nullptr,
+                    MONGOOSE_TASK_PRIO,
+                    &m_MongooseTaskHandle
+                );
+                assert(nullptr != m_MongooseTaskHandle);
+                isMongooseRunning = true;
+            }
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
     };
 }
