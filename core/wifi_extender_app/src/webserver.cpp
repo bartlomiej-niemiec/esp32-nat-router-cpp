@@ -3,6 +3,7 @@
 #include "esp_log.h"
 
  UserCredential::UserCredentialManager * WebServer::m_pUserCredentialManager = nullptr;
+ WifiExtender::WifiExtenderIf * WebServer::m_pWifiExtender = nullptr;
 
 int WebServer::AuthenticateUser(const char *user, const char *pass)
 {
@@ -40,13 +41,18 @@ WebServer & WebServer::GetInstance()
     return webserver;
 }
 
-bool WebServer::Init(UserCredential::UserCredentialManager * pUserCredentialManager)
+bool WebServer::Init(
+    UserCredential::UserCredentialManager * pUserCredentialManager,
+    WifiExtender::WifiExtenderIf * pWifiExtenderIf)
 {
     if (!m_WebServerInitialized)
     {
         if (nullptr == pUserCredentialManager) return false;
+        if (nullptr == pWifiExtenderIf) return false;
 
         m_pUserCredentialManager = pUserCredentialManager;
+        m_pWifiExtender = pWifiExtenderIf;
+
         m_WebServerInitialized = true;
     }
     return m_WebServerInitialized;

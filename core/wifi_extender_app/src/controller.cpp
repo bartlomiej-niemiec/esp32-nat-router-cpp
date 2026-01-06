@@ -14,8 +14,7 @@ void Controller::Startup()
     using namespace WifiExtender;
 
     WifiExtenderConfig config(m_NetworkConfigManager.GetApConfig(), m_NetworkConfigManager.GetStaConfig());
-    pWifiExtender = &WifiExtenderFactory::GetInstance().GetWifiExtender();
-    pWifiScannerIf = pWifiExtender->GetScanner();
+    m_pWifiExtender = &WifiExtenderFactory::GetInstance().GetWifiExtender();
    
     if (ESP32S3_TARGET)
     {
@@ -26,13 +25,16 @@ void Controller::Startup()
     assert(nullptr != m_WifiExtenderEventQueue);
     WifiEventDispatcher logEventListener(m_WifiExtenderEventQueue);
 
-    pWifiExtender->RegisterListener(&logEventListener);
-    pWifiExtender->Startup(config);
+    m_pWifiExtender->RegisterListener(&logEventListener);
+    m_pWifiExtender->Startup(config);
     constexpr uint32_t DELAY_MS = 200;
     vTaskDelay(pdMS_TO_TICKS(DELAY_MS));
 
     WebServer & webServerInstance = WebServer::GetInstance();
-    webServerInstance.Init(&UserCredential::UserCredentialManager::GetInstance());
+    webServerInstance.Init(
+        &UserCredential::UserCredentialManager::GetInstance(),
+        m_pWifiExtender
+    );
     webServerInstance.Startup();
 
     WifiExtender::WifiExtenderState state;

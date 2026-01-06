@@ -7,6 +7,7 @@
 #include "mongoose/mongoose_glue.h"
 
 #include "user_credential_manager/user_credential_manager.hpp"
+#include "wifi_extender_if/wifi_extender_if.hpp"
 
 #include <atomic>
 #include <string_view>
@@ -17,7 +18,10 @@ class WebServer
 
         static WebServer & GetInstance();
 
-        bool Init(UserCredential::UserCredentialManager * pUserCredentialManager);
+        bool Init(
+            UserCredential::UserCredentialManager * pUserCredentialManager,
+            WifiExtender::WifiExtenderIf * pWifiExtenderIf
+        );
 
         void Startup();
 
@@ -45,7 +49,8 @@ class WebServer
         TaskHandle_t m_WebServerTaskHandle;
 
         static UserCredential::UserCredentialManager * m_pUserCredentialManager;
-
+        static WifiExtender::WifiExtenderIf * m_pWifiExtender;
+        
         static int AuthenticateUser(const char *user, const char *pass);
         
 };

@@ -25,9 +25,7 @@ class Controller
 
         NetworkStatusLed::NetworkStatusLed * m_Led;
 
-        WifiExtender::WifiExtenderIf * pWifiExtender;
-
-        WifiExtender::WifiExtenderScannerIf * pWifiScannerIf;
+        WifiExtender::WifiExtenderIf * m_pWifiExtender;
 
         NetworkConfigManager m_NetworkConfigManager;
 
