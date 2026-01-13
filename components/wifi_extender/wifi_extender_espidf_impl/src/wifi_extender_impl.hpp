@@ -30,6 +30,8 @@ public:
 
     bool TryToReconnect();
 
+    int GetNoClients() const;
+
     WifiExtenderState GetState() const;
 
     WifiExtenderScannerIf * GetScanner()

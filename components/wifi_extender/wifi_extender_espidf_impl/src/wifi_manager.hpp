@@ -4,8 +4,6 @@
 #include "esp_wifi.h"
 #include "wifi_extender_if/wifi_extender_if.hpp"
 #include "wifi_extender_if/wifi_extender_scanner_if.hpp"
-
-
 #include "wifi_scanner.hpp"
 #include "wifi_manager_context.hpp"
 #include "freertos/task.h"
@@ -123,6 +121,8 @@ class WifiManager:
         bool TryToReconnect();
         
         WifiExtenderState GetState() const;
+
+        int GetNoClients() const;
 
         bool Scan(const ScanOptions& opts = {}) override;
 

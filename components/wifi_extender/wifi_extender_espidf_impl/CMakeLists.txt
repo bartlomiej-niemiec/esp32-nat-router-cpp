@@ -9,7 +9,6 @@ idf_component_register(
         "./src/wifi_manager_context.cpp"
         "./src/wifi_scanner.cpp"
     PRIV_REQUIRES esp_wifi "wifi_extender_if"
-                            "libs"
                             "utils"
                             esp_netif
                             esp_timer

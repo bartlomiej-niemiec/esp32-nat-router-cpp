@@ -15,8 +15,8 @@ enum class ScannerState { Idle, Scanning, Done, Cancelled, Error };
 enum class AuthMode : uint8_t { Open, WEP, WPA_PSK, WPA2_PSK, WPA_WPA2_PSK, WPA3_PSK, Unknown };
 
 struct WifiNetwork {
-    static constexpr int MAX_SSID_SIZE = 34;
-    static constexpr int MAX_BSSID_SIZE = 34;
+    static constexpr int MAX_SSID_SIZE = 32;
+    static constexpr int MAX_BSSID_SIZE = 32;
 
     std::array<char, MAX_SSID_SIZE>   ssid{};
     std::array<uint8_t, MAX_BSSID_SIZE> bssid{};
@@ -24,13 +24,13 @@ struct WifiNetwork {
     uint8_t               channel{};
     AuthMode              auth{};
 
-    WifiNetwork(uint8_t * pssid,
-        uint8_t ssid_size,
-        uint8_t * pbssid,
-        uint8_t bssid_size,
-        int8_t rssi,
-        uint8_t channel,
-        AuthMode auth
+    WifiNetwork(const uint8_t * pssid,
+        const uint8_t ssid_size,
+        const uint8_t * pbssid,
+        const uint8_t bssid_size,
+        const int8_t rssi,
+        const uint8_t channel,
+        const AuthMode auth
     )
     {
         assert(ssid_size <= MAX_SSID_SIZE);

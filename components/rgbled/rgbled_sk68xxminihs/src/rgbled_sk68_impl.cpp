@@ -60,10 +60,6 @@ Sk68xxminiHsImpl::Sk68xxminiHsImpl(const uint32_t gpio_pin_num):
 
     ESP_ERROR_CHECK(rmt_new_copy_encoder(&copyConfig, &m_resetEncoderHandle));
 
-    esp_err_t timerInitErr = esp_timer_init();
-    const bool isTimerInitialized = (timerInitErr == ESP_OK || timerInitErr == ESP_ERR_INVALID_STATE);
-    assert(true == isTimerInitialized);
-
     esp_timer_create_args_t timerArgs = {
         .callback = BlinkTimerCallback,
         .arg = this,
@@ -99,17 +95,21 @@ void Sk68xxminiHsImpl::BlinkTimerCallback(void * pArg)
 
 void Sk68xxminiHsImpl::Solid(const RgbColor color)
 {
-    MutexLockGuard lockGuard(m_Semaphore);
     StopBlinkyTimer();
-    SetColor(color);
+    {
+        MutexLockGuard lock(m_Semaphore);
+        SetColor(color);
+    }
 }
 
 void Sk68xxminiHsImpl::Blink(const RgbColor color, const uint32_t frequency_hz)
 {
-    MutexLockGuard lockGuard(m_Semaphore);
     StopBlinkyTimer();
-    m_BlinkyColor = color;
-    m_BlinkState = !m_BlinkState;
+    {
+        MutexLockGuard lock(m_Semaphore);
+        m_BlinkyColor = color;
+        m_BlinkState = false;
+    }
     const uint64_t periodUs = (1.0 / static_cast<double>(frequency_hz)) * 1e6;
     esp_timer_start_periodic(m_BlinkyTimer, periodUs);
 }

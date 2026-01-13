@@ -100,4 +100,8 @@ WifiExtenderState WifiExtenderImpl::GetState() const
     return m_WifiManager.GetState();
 }
 
+int WifiExtenderImpl::GetNoClients() const {
+    return m_WifiManager.GetNoClients();
+}
+
 }

@@ -38,6 +38,8 @@ public:
 
     virtual WifiExtenderScannerIf * GetScanner() = 0;
 
+    virtual int GetNoClients() const = 0;
+
 };
 
 }

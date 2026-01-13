@@ -24,11 +24,11 @@ bool WifiManager::Init()
         return false;
     }
 
-    m_WifiManagerContext.m_WifiSta.Init();
-    m_WifiManagerContext.m_WifiSta.SetState(WifiSta::State::INITIALIZED);
-
     m_WifiManagerContext.m_WifiAp.Init();
     m_WifiManagerContext.m_WifiAp.SetState(WifiAp::State::INITIALIZED);
+
+    m_WifiManagerContext.m_WifiSta.Init();
+    m_WifiManagerContext.m_WifiSta.SetState(WifiSta::State::INITIALIZED);
 
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     err = esp_wifi_init(&cfg);
@@ -177,8 +177,6 @@ WifiManager::WifiManager():
     m_ReconnectCounterVal(0),
     m_StaConnectionTimer(nullptr)
 {
-
-    assert(esp_timer_init() != ESP_ERR_NO_MEM );
     esp_timer_create_args_t timerStaArgs;
     timerStaArgs.callback = RetryConnectToNetwork;
     timerStaArgs.arg = this;
@@ -254,7 +252,7 @@ bool WifiManager::TryToReconnect()
 bool WifiManager::RegisterListener(EventListener * pEventListener)
 {
     assert(pEventListener != nullptr);
-    m_WifiExtenderStateListeners.emplace_back(pEventListener);
+    m_WifiExtenderStateListeners.push_back(pEventListener);
     return true;
 }
 
@@ -342,6 +340,11 @@ void WifiManager::StopStaBackoffTimer()
 WifiExtenderState WifiManager::GetState() const
 {
     return m_WifiManagerContext.m_WifiManagerState;
+}
+
+int WifiManager::GetNoClients() const
+{
+    return m_WifiManagerContext.m_ApClientsCounter;
 }
 
 WifiManager::Snapshot WifiManager::makeSnapshot() const
