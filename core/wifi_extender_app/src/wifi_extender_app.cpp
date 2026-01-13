@@ -54,7 +54,8 @@ void Startup()
     WebServerServices::Init(
         &(UserCredential::UserCredentialManager::GetInstance()),
         &rWifiExtender,
-        &m_NetworkConfigManager
+        &m_NetworkConfigManager,
+        &wifiEventMonitor
     );
     
     WebServer & webServerInstance = WebServer::GetInstance();

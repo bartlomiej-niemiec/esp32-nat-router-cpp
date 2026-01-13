@@ -97,6 +97,7 @@ void WifiScanner::ScanningCompleteSignal()
             )
         );
     }
+    std::sort(m_ScannedNetworks.begin(), m_ScannedNetworks.end(), [](const auto & n1, const auto & n2){return n1.rssi > n2.rssi;});
     m_State = m_State == ScannerState::Cancelled ? ScannerState::Idle : ScannerState::Done;
 }
 

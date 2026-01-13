@@ -82,6 +82,8 @@ struct WifiExtenderConfig {
     bool operator==(const WifiExtenderConfig& other) const;
 
     bool operator!=(const WifiExtenderConfig& other) const;
+
+    static void printConfig(WifiExtenderConfig& config);
 };
 
 
@@ -95,7 +97,7 @@ public:
         int res = ip4addr_aton(ipAddrStr, &ipAddrT);
         if (res == 1)
         {
-            std::memcpy(&ipAddrNum, &ipAddrT, 4);
+            std::memcpy(&ipAddrNum, &ipAddrT, sizeof(ip4_addr_t));
             return true;
         }
         return false;

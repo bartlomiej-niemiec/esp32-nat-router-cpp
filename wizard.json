@@ -1,11 +1,16 @@
 {
   "version": "1.0.3", 
   "api": {
+    "applynetworkconfig": {
+      "type": "action", 
+      "read_level": 7, 
+      "write_level": 7
+    }, 
     "login": {"type": "data", "read_level": 0, "write_level": 0, "attributes": {"password": {"type": "string", "value": "", "size": 32}, "username": {"type": "string", "value": "admin", "size": 32}}}, 
     "saveapsettings": {
       "type": "data", 
-      "read_level": 0, 
-      "write_level": 0, 
+      "read_level": 7, 
+      "write_level": 7, 
       "attributes": {
         "ipaddress": {"type": "string", "value": "192.168.50.1", "size": 15}, 
         "password": {"type": "string", "value": "", "size": 64}, 
@@ -14,8 +19,8 @@
     }, 
     "savestasettings": {
       "type": "data", 
-      "read_level": 0, 
-      "write_level": 0, 
+      "read_level": 7, 
+      "write_level": 7, 
       "attributes": {
         "Name": {"type": "string", "value": "", "size": 32}, 
         "Password": {"type": "string", "value": "", "size": 64}, 
@@ -24,7 +29,7 @@
     }, 
     "stanetworks": {
       "type": "data", 
-      "read_level": 6, 
+      "read_level": 1, 
       "write_level": 0, 
       "readonly": true, 
       "attributes": {
@@ -57,12 +62,12 @@
     }, 
     "setsta": {
       "type": "action", 
-      "read_level": 0, 
-      "write_level": 0
+      "read_level": 7, 
+      "write_level": 7
     }, 
     "info": {
       "type": "data", 
-      "read_level": 0, 
+      "read_level": 1, 
       "write_level": 0, 
       "attributes": {
         "Clients": {"type": "int", "value": 0}, 
@@ -75,7 +80,8 @@
     }, 
     "scannetworks": {
       "type": "action", 
-      "write_level": 0
+      "write_level": 1, 
+      "read_level": 1
     }, 
     "local": {
       "type": "local", 
@@ -85,7 +91,9 @@
       }
     }, 
     "save_event": {
-      "type": "action"
+      "type": "action", 
+      "write_level": 1, 
+      "read_level": 1
     }, 
     "events": {
       "type": "custom", 
@@ -127,8 +135,8 @@
       "bgColor": "#282829"
     }, 
     "pages": [
-      {"title": "Dashboard", "icon": "desktop", "level": 0, "css": "flex: 0 0 auto;\nwidth: 1013px;\nheight: 704.890625px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
-          {"classes": "container", "css": "flex: 0 0 auto;\nheight: 346px;\nwidth: 989px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
+      {"title": "Dashboard", "icon": "desktop", "level": 0, "css": "flex: 0 0 auto;\nwidth: 935px;\nheight: 506.859375px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
+          {"classes": "container", "css": "flex: 0 0 auto;\nheight: 404px;\nwidth: 911px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
               {"classes": "card", "layout": [
                   {"classes": "card", "layout": [
                       {"format": "Wifi Extender State"},
@@ -176,7 +184,7 @@
                                   {"format": "${info.StaConn ? 'Connected' : 'Not Connected'}", "css": "flex: 0 0 auto;\nwidth: 345.625px;\nheight: 24px;\nfont-size: 1rem;"}
                                 ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 315px;"},
                               {"classes": "card", "layout": [
-                                  {"format": "Internet Access", "css": "font-size: 1rem;"}
+                                  {"format": "Internet Access", "css": "height: 21px;\nfont-size: 1rem;"}
                                 ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 314px;\nbackground: ${info.StaIa ? 'green' : '#CD5C5C'};"}
                             ], "__label": "stats"}
                         ], "__label": "stats"}
@@ -184,39 +192,42 @@
                 ], "css": "flex: 0 0 auto;\nheight: 303px;\nwidth: 532px;"}
             ]}
         ]},
-      {"title": "Network Settings", "icon": "settings", "css": "flex: 0 0 auto;\nwidth: 2410px;\nheight: 1240.890625px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
-          {"classes": "container", "css": "flex: 0 0 auto;\nwidth: 2269px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
-              {"classes": "card", "layout": [
-                  {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
-                          {"id": 0, "timestamp": 12345, "message": "Something failed", "priority": 2, "status": "active", "notes": "some notes"},
-                          {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
-                        ]}}, "layout": [
-                      {"classes": "title", "format": "AP Network", "css": "height: 2.1123046875rem;"},
-                      {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
-                          {"classes": "card", "layout": [
-                              {"format": "Current Name", "css": "height: 1.1875rem;"},
-                              {"format": "${info.AP}", "css": "height: 1.875rem;"}
-                            ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"}
-                        ]},
-                      {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
+      {"title": "Network Settings", "icon": "settings", "css": "flex: 0 0 auto;\nwidth: 1095px;\nheight: 982px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
+          {"classes": "container", "css": "flex: 0 0 auto;\nheight: 958px;\nwidth: 1071px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
+              {"type": "action", "title": "Apply Config", "icon": "refresh", "ref": "applynetworkconfig", "css": "font-size: 1.2rem;\nflex: 0 0 auto;\nheight: 46px;\nwidth: 1071px;"},
+              {"classes": "container", "css": "flex: 0 0 auto;\nheight: 483px;\nwidth: 490px;\ngap: 0.5rem;\nflex-wrap: wrap;", "layout": [
+                  {"classes": "card", "layout": [
+                      {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
+                              {"id": 0, "timestamp": 12345, "message": "Something failed", "priority": 2, "status": "active", "notes": "some notes"},
+                              {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
+                            ]}}, "layout": [
+                          {"classes": "title", "format": "AP Network", "css": "height: 2.1123046875rem;"},
                           {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
                               {"classes": "card", "layout": [
-                                  {"format": "IP Address"},
-                                  {"type": "input", "ref": "saveapsettings.ipaddress", "__label": "input", "css": "font-size: 1rem;\ncolor: #030303;\nflex: 0 0 auto;\nheight: 2rem;\nwidth: 17.75rem;"}
-                                ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"},
-                              {"classes": "card", "layout": [
-                                  {"format": "New Name"},
-                                  {"type": "input", "ref": "saveapsettings.name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
-                                ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"},
-                              {"classes": "card", "layout": [
-                                  {"format": "Password"},
-                                  {"type": "input", "ref": "saveapsettings.password", "__label": "input", "css": "color: #050505;\nflex: 0 0 auto;\nheight: 2rem;\nwidth: 17.75rem;"}
-                                ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"}
-                            ], "__label": "stats"}
-                        ], "__label": "stats"},
-                      {"type": "savebutton", "title": "Set", "icon": "save", "ref": "saveapsettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 19.5rem;"}
-                    ], "css": "flex: 0 0 auto;\nheight: 564px;\nwidth: 21.375rem;"}
-                ], "css": "flex: 0 0 auto;\nheight: 583px;\nwidth: 368px;"},
+                                  {"format": "Current Name", "css": "height: 1.1875rem;"},
+                                  {"format": "${info.AP}", "css": "height: 1.875rem;"}
+                                ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 438px;"}
+                            ]},
+                          {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
+                              {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
+                                  {"classes": "card", "layout": [
+                                      {"format": "IP Address"},
+                                      {"type": "input", "ref": "saveapsettings.ipaddress", "__label": "input", "css": "font-size: 1rem;\ncolor: #030303;\nflex: 0 0 auto;\nheight: 2rem;\nwidth: 17.75rem;"}
+                                    ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 435px;"},
+                                  {"classes": "card", "layout": [
+                                      {"format": "New Name"},
+                                      {"type": "input", "ref": "saveapsettings.name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
+                                    ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 433px;"},
+                                  {"classes": "card", "layout": [
+                                      {"format": "Password"},
+                                      {"type": "input", "ref": "saveapsettings.password", "__label": "input", "css": "flex: 0 0 auto;\ncolor: #050505;\nheight: 2rem;\nwidth: 17.75rem;", "input": "password"}
+                                    ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 430px;"}
+                                ], "__label": "stats"}
+                            ], "__label": "stats"},
+                          {"type": "savebutton", "title": "Set", "icon": "save", "ref": "saveapsettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 431px;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 458px;\nwidth: 464px;"}
+                    ], "css": "flex: 0 0 auto;\nheight: 483px;\nwidth: 490px;"}
+                ]},
               {"classes": "card", "layout": [
                   {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
                           {"id": 0, "timestamp": 12345, "message": "Something failed", "priority": 2, "status": "active", "notes": "some notes"},
@@ -227,29 +238,29 @@
                           {"classes": "card", "layout": [
                               {"format": "Current", "css": "height: 1.1875rem;"},
                               {"format": "${info.STA}", "css": "height: 30px;"}
-                            ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"}
+                            ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 519px;"}
                         ]},
                       {"classes": "card", "layout": [
                           {"format": "Network Scanner ID", "css": "flex: 0 0 auto;\nwidth: 122.96875px;"},
                           {"type": "dropdown", "ref": "savestasettings.SSIDNoId", "options": "0, 1, 2, 3, 4, 5", "css": "color: #050505;\nbackground: #f0efef;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 79px;\nwidth: 316px;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 79px;\nwidth: 516px;"},
                       {"classes": "card", "layout": [
                           {"format": "New Name"},
                           {"type": "input", "ref": "savestasettings.Name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 19.75rem;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 513px;"},
                       {"classes": "card", "layout": [
                           {"format": "Password"},
-                          {"type": "input", "ref": "savestasettings.Password", "__label": "input", "css": "flex: 0 0 auto;\ncolor: #050505;\nheight: 2rem;\nwidth: 17.75rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 84px;\nwidth: 19.75rem;"},
-                      {"type": "savebutton", "title": "Set", "icon": "save", "ref": "savestasettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 19.5rem;"}
-                    ], "css": "flex: 0 0 auto;\nheight: 564px;\nwidth: 21.375rem;"}
-                ], "css": "flex: 0 0 auto;\nheight: 583px;\nwidth: 368px;"},
+                          {"type": "input", "ref": "savestasettings.Password", "__label": "input", "css": "flex: 0 0 auto;\ncolor: #050505;\nheight: 2rem;\nwidth: 17.75rem;", "input": "password"}
+                        ], "css": "flex: 0 0 auto;\nheight: 84px;\nwidth: 515px;"},
+                      {"type": "savebutton", "title": "Set", "icon": "save", "ref": "savestasettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 515px;"}
+                    ], "css": "flex: 0 0 auto;\nheight: 462px;\nwidth: 545px;"}
+                ], "css": "flex: 0 0 auto;\nheight: 484px;\nwidth: 571px;"},
               {"classes": "card", "layout": [
                   {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
                           {"id": 0, "timestamp": 12345, "message": "Something failed", "priority": 2, "status": "active", "notes": "some notes"},
                           {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
                         ]}}, "layout": [
-                      {"type": "savebutton", "title": "Scan Networks", "icon": "reload", "ref": "scannetworks", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 998px;"},
+                      {"type": "action", "title": "Scan Networks", "icon": "refresh", "ref": "scannetworks", "css": "flex: 0 0 auto;\nheight: 46px;\nwidth: 998px;", "trigger_on_press_and_release": false},
                       {"classes": "container", "layout": [
                           {"format": "ID", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
                           {"format": "SSID", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
@@ -293,7 +304,7 @@
                           {"format": "${stanetworks.net5_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
                         ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1007px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"}
                     ], "css": "flex: 0 0 auto;\nheight: 299px;\nwidth: 1044px;"}
-                ], "css": "flex: 0 0 auto;\nheight: 333px;\nwidth: 1071px;"}
+                ], "css": "flex: 0 0 auto;\nheight: 321px;\nwidth: 1070px;"}
             ], "__label": "stats"}
         ], "level": "5"}
     ], 

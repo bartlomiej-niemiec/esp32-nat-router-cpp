@@ -1,4 +1,5 @@
 #include "wifi_extender_if/wifi_extender_config.hpp"
+#include "esp_log.h"
 #include <algorithm>
 #include <cstring>
 
@@ -109,6 +110,12 @@ WifiExtenderConfig::WifiExtenderConfig():
     apConfig(),
     staConfig()
 {}
+
+void WifiExtenderConfig::printConfig(WifiExtenderConfig& config)
+{
+    ESP_LOGI("WifiExtenderConfig", "AP: %s", config.apConfig.ssid.data());
+    ESP_LOGI("WifiExtenderConfig", "STA: %s", config.staConfig.ssid.data());
+}
 
 bool WifiExtenderConfig::operator==(const WifiExtenderConfig& other) const {
     return apConfig == other.apConfig && staConfig == other.staConfig;

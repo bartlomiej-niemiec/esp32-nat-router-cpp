@@ -7,6 +7,11 @@ void WebServer::WebServerMain(void *pArg) {
     mongoose_init();
     mongoose_set_auth_handler(WebServerServices::AuthenticateUser);
     mongoose_set_http_handlers("info", WebServerServices::GetWifiExtenderInfo, WebServerServices::SetWifiExtenderInfo);
+    mongoose_set_http_handlers("stanetworks", WebServerServices::GetStaScannedNetworks, NULL);
+    mongoose_set_http_handlers("scannetworks", WebServerServices::IsStaScannningInProgress, WebServerServices::StartStaScannningNetworks);
+    mongoose_set_http_handlers("saveapsettings", WebServerServices::GetApSetting, WebServerServices::SetApSetting);
+    mongoose_set_http_handlers("savestasettings", WebServerServices::GetStaSettings, WebServerServices::SetStaSetings);
+    mongoose_set_http_handlers("applynetworkconfig", WebServerServices::IsNewSavedAndDifferent, WebServerServices::StartWifiExtenderWithNewConfig);
     mg_log_set(MG_LL_DEBUG);    // Set log level to debug
     for(;;) {                   // Infinite event loop
         mongoose_poll();        // Process network events
