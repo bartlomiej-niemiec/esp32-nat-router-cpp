@@ -13,7 +13,7 @@ idf_component_register(
                                     rgbled_if
                                     rgbled_sk68xxminihs
                                     data_storer_if
-                                    data_storer_nvs_impl         
-                                    mongoose
+                                    data_storer_nvs_impl
+                                    mongoose         
                                     user_credential_manager
                     )

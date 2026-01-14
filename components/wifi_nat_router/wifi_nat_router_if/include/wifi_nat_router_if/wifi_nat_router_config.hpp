@@ -103,6 +103,17 @@ public:
         return false;
     }
 
+    static constexpr uint8_t MAX_IP_ADDRESS_STRING_SIZE = 16;
+
+    static constexpr bool ConvertU32ToIpAddressString(char ipAddrStr[MAX_IP_ADDRESS_STRING_SIZE], uint32_t ipAddrNum)
+    {
+
+        ip4_addr_t ipAddrT = {.addr = ipAddrNum};
+        strncpy(ipAddrStr, ip4addr_ntoa(&ipAddrT), 15);
+        ipAddrStr[15] = '\0';
+        return true;
+    }
+
     static constexpr std::string_view WifiNatRouterStaToString(const WifiNatRouterState & state)
     {
         switch(state)

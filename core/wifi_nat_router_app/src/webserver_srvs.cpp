@@ -3,6 +3,11 @@
 #include "wifi_nat_router_if/wifi_nat_router_if.hpp"
 #include "wifi_nat_router_if/wifi_nat_router_config.hpp"
 
+#include "config.hpp"
+
+#include "esp_log.h"
+
+#include <string>
 #include <string_view>
 #include <algorithm>
 
@@ -75,58 +80,74 @@ int WebServerServices::AuthenticateUser(const char *user, const char *pass)
 
 void WebServerServices::GetApSetting(saveapsettings * settings)
 {
-    WifiNatRouter::
-AccessPointConfig apConfig = m_pNetworkConfigManager->GetApConfig();
+    static_assert(WifiNatRouter::WifiNatRouterHelpers::MAX_IP_ADDRESS_STRING_SIZE <= sizeof(settings->ipaddress));
+    static_assert(WifiNatRouter::WifiNatRouterHelpers::MAX_IP_ADDRESS_STRING_SIZE <= sizeof(settings->networkmask));
+
+    WifiNatRouter::AccessPointConfig apConfig = m_pNetworkConfigManager->GetApConfig();
     strncpy(settings->name, apConfig.ssid.data() ,sizeof(settings->name));
+    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->ipaddress, apConfig.ipAddress);
+    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->networkmask, apConfig.networkmask);
 }
 
 void WebServerServices::SetApSetting(saveapsettings * settings)
 {
     if (m_ConfigChangeInProgress) return;
 
-    assert(m_PendingApConfig.ssid.max_size() >= sizeof(settings->name));
-    std::string_view ssid(settings->name);
+    if (static_cast<uint8_t>(strnlen(settings->password, sizeof(settings->password))) < PASSWORD_MINIMAL_SIZE) return;
 
-    assert(m_PendingApConfig.password.max_size() >= sizeof(settings->password));
+    static_assert(m_PendingApConfig.ssid.max_size() >= sizeof(settings->name));
+    static_assert(m_PendingApConfig.password.max_size() >= sizeof(settings->password));
+
+    std::string_view ssid(settings->name);
     std::string_view password(settings->password);
 
     uint32_t ipAddress;
     if (!WifiNatRouter::
 WifiNatRouterHelpers::ConvertStringToIpAddress(settings->ipaddress, ipAddress)) return;
 
+    uint32_t netMask;   
+    if (!WifiNatRouter::
+WifiNatRouterHelpers::ConvertStringToIpAddress(settings->networkmask, netMask)) return;
+
+
     m_PendingApConfig = WifiNatRouter::
-AccessPointConfig(ssid, password, ipAddress, 0xFFFFFFFF);
+AccessPointConfig(ssid, password, ipAddress, netMask);
 
     m_ApNetworkConfigSaved = true;
 }
 
 void WebServerServices::GetLogin(login * loginData)
 {
+    if (!loginData) return;
 
+    memset(loginData->username, 0, sizeof(loginData->username)); 
+    memset(loginData->password, 0, sizeof(loginData->password)); 
 }
 
 void WebServerServices::SetLogin(login * loginData)
 {
-
+    (void) loginData;
 }
 
 void WebServerServices::GetStaSettings(savestasettings * settings)
 {
     WifiNatRouter::
 StaConfig staConfig = m_pNetworkConfigManager->GetStaConfig();
-    strncpy(settings->Name, staConfig.ssid.data() ,sizeof(settings->Name));
+    strncpy(settings->Name, staConfig.ssid.data(), sizeof(settings->Name));
 }
 
 void WebServerServices::SetStaSetings(savestasettings * settings)
 {
     if (m_ConfigChangeInProgress) return;
 
-    assert(m_PendingStaConfig.password.max_size() >= sizeof(settings->Password));
+    static_assert(m_PendingStaConfig.password.max_size() >= sizeof(settings->Password));
+    static_assert(m_PendingStaConfig.ssid.size() >= sizeof(settings->Name));
+    
     if (settings->SSIDNoId > 0)
     {
         if (!m_ScannedNetworks.empty())
         {
-            assert(settings->SSIDNoId <= 5);
+            assert(settings->SSIDNoId <= 8);
             assert(m_PendingStaConfig.ssid.max_size() >= m_ScannedNetworks[settings->SSIDNoId - 1].ssid.size());
             std::string_view ssid(m_ScannedNetworks[settings->SSIDNoId - 1].ssid.data());
             std::string_view password(settings->Password);
@@ -137,7 +158,6 @@ StaConfig(ssid, password);
     }
     else
     {
-        assert(m_PendingStaConfig.ssid.size() >= sizeof(settings->Name));
         std::string_view ssid(settings->Name);
         std::string_view password(settings->Password);
         m_PendingStaConfig = WifiNatRouter::
@@ -151,16 +171,21 @@ void WebServerServices::GetStaScannedNetworks(stanetworks * networks)
 {
     memset(networks, 0, sizeof(stanetworks));
 
-    NetView nets[5] = {
-        { networks->net1_ssid, &networks->net1_rssi, &networks->net1_channel, networks->net1_auth, networks->net1_visibility },
-        { networks->net2_ssid, &networks->net2_rssi, &networks->net2_channel, networks->net2_auth, networks->net2_visibility },
-        { networks->net3_ssid, &networks->net3_rssi, &networks->net3_channel, networks->net3_auth, networks->net3_visibility },
-        { networks->net4_ssid, &networks->net4_rssi, &networks->net4_channel, networks->net4_auth, networks->net4_visibility },
-        { networks->net5_ssid, &networks->net5_rssi, &networks->net5_channel, networks->net5_auth, networks->net5_visibility }
+    NetView nets[8] = {
+        { networks->net1_ssid, &networks->net1_rssi, &networks->net1_channel, networks->net1_auth},
+        { networks->net2_ssid, &networks->net2_rssi, &networks->net2_channel, networks->net2_auth},
+        { networks->net3_ssid, &networks->net3_rssi, &networks->net3_channel, networks->net3_auth},
+        { networks->net4_ssid, &networks->net4_rssi, &networks->net4_channel, networks->net4_auth},
+        { networks->net5_ssid, &networks->net5_rssi, &networks->net5_channel, networks->net5_auth},
+        { networks->net6_ssid, &networks->net6_rssi, &networks->net6_channel, networks->net6_auth},
+        { networks->net7_ssid, &networks->net7_rssi, &networks->net7_channel, networks->net7_auth},
+        { networks->net8_ssid, &networks->net8_rssi, &networks->net8_channel, networks->net8_auth}
     };
+
     if (!m_ScannedNetworks.empty())
     {
-        auto noNetworksFound = std::min(m_ScannedNetworks.size(), size_t(5));
+        auto noNetworksFound = std::min(m_ScannedNetworks.size(), size_t(8));
+        networks->networkFound = noNetworksFound;
 
         for (size_t i = 0; i < noNetworksFound; i++) {
             const auto &w = m_ScannedNetworks[i];
@@ -168,19 +193,9 @@ void WebServerServices::GetStaScannedNetworks(stanetworks * networks)
             *nets[i].rssi    = w.rssi;
             *nets[i].channel = w.channel;
             strncpy(nets[i].auth,
-                    WifiNatRouter::
-getAuthString(w.auth).data(), 31);
+                    WifiNatRouter::getAuthString(w.auth).data(), 31);
         }
-        
-        /// Clear rest networks
-        for (int i = noNetworksFound; i < 5; i++)
-        {
-            const auto &w = m_ScannedNetworks[i];
-            memset(nets[i].ssid, 0, 31);
-            *nets[i].rssi    = 0;
-            *nets[i].channel = 0;
-            memset(nets[i].auth, 0, 31);
-        }
+    
     }
 }
 

@@ -12,7 +12,8 @@
       "read_level": 7, 
       "write_level": 7, 
       "attributes": {
-        "ipaddress": {"type": "string", "value": "192.168.50.1", "size": 15}, 
+        "networkmask": {"type": "string", "value": "255.255.255.0", "size": 16}, 
+        "ipaddress": {"type": "string", "value": "192.168.50.1", "size": 16}, 
         "password": {"type": "string", "value": "", "size": 64}, 
         "name": {"type": "string", "value": "", "size": 32}
       }
@@ -33,31 +34,39 @@
       "write_level": 0, 
       "readonly": true, 
       "attributes": {
+        "net8_auth": {"type": "string", "value": "", "size": 32}, 
+        "net8_channel": {"type": "int", "value": 0}, 
+        "net8_rssi": {"type": "int", "value": 0}, 
+        "net8_ssid": {"type": "string", "value": "", "size": 32}, 
+        "net7_auth": {"type": "string", "value": "", "size": 32}, 
+        "net7_channel": {"type": "int", "value": 0}, 
+        "net7_rssi": {"type": "int", "value": 0}, 
+        "net7_ssid": {"type": "string", "value": "", "size": 32}, 
+        "net6_auth": {"type": "string", "value": "", "size": 32}, 
+        "net6_channel": {"type": "int", "value": 0}, 
+        "net6_rssi": {"type": "int", "value": 0}, 
+        "net6_ssid": {"type": "string", "value": "", "size": 32}, 
+        "networkFound": {"type": "int", "value": 0}, 
         "net1_ssid": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
         "net1_rssi": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net1_channel": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net1_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
-        "net1_visibility": {"type": "string", "value": "none", "size": 6}, 
         "net2_ssid": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
         "net2_rssi": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net2_channel": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net2_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
-        "net2_visibility": {"type": "string", "value": "none", "size": 6}, 
         "net3_ssid": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
         "net3_rssi": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net3_channel": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net3_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
-        "net3_visibility": {"type": "string", "value": "none", "size": 6}, 
         "net4_ssid": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
         "net4_rssi": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net4_channel": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net4_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
-        "net4_visibility": {"type": "string", "value": "none", "size": 6}, 
         "net5_ssid": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
         "net5_rssi": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
         "net5_channel": {"type": "int", "read_level": 6, "write_level": 0, "value": 0}, 
-        "net5_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}, 
-        "net5_visibility": {"type": "string", "value": "none", "size": 6}
+        "net5_auth": {"type": "string", "read_level": 6, "write_level": 0, "value": "", "size": 32}
       }
     }, 
     "setsta": {
@@ -139,7 +148,7 @@
           {"classes": "container", "css": "flex: 0 0 auto;\nheight: 404px;\nwidth: 911px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
               {"classes": "card", "layout": [
                   {"classes": "card", "layout": [
-                      {"format": "Wifi Extender State"},
+                      {"format": "Wifi NAT Router State"},
                       {"format": "${info.State}", "css": "height: 30px;"}
                     ], "__label": "card"}
                 ], "css": "flex: 0 0 auto;\nheight: 93px;\nwidth: 911px;"},
@@ -192,7 +201,7 @@
                 ], "css": "flex: 0 0 auto;\nheight: 303px;\nwidth: 532px;"}
             ]}
         ]},
-      {"title": "Network Settings", "icon": "settings", "css": "flex: 0 0 auto;\nwidth: 1095px;\nheight: 982px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
+      {"title": "Network Settings", "icon": "settings", "css": "flex: 0 0 auto;\nwidth: 1095px;\nheight: 1223px;\npadding: 0.75rem;\ngap: 0.5rem;\nmin-height: 2rem;\ndisplay: flex;\nflex-direction: column;\nflex-grow: 1;\noverflow: auto;", "layout": [
           {"classes": "container", "css": "flex: 0 0 auto;\nheight: 958px;\nwidth: 1071px;\nflex-wrap: wrap;\ngap: 0.5rem;", "layout": [
               {"type": "action", "title": "Apply Config", "icon": "refresh", "ref": "applynetworkconfig", "css": "font-size: 1.2rem;\nflex: 0 0 auto;\nheight: 46px;\nwidth: 1071px;"},
               {"classes": "container", "css": "flex: 0 0 auto;\nheight: 483px;\nwidth: 490px;\ngap: 0.5rem;\nflex-wrap: wrap;", "layout": [
@@ -202,6 +211,7 @@
                               {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
                             ]}}, "layout": [
                           {"classes": "title", "format": "AP Network", "css": "height: 2.1123046875rem;"},
+                          {"type": "savebutton", "title": "Set", "icon": "save", "ref": "saveapsettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 431px;"},
                           {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
                               {"classes": "card", "layout": [
                                   {"format": "Current Name", "css": "height: 1.1875rem;"},
@@ -215,6 +225,10 @@
                                       {"type": "input", "ref": "saveapsettings.ipaddress", "__label": "input", "css": "font-size: 1rem;\ncolor: #030303;\nflex: 0 0 auto;\nheight: 2rem;\nwidth: 17.75rem;"}
                                     ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 435px;"},
                                   {"classes": "card", "layout": [
+                                      {"format": "Network Mask"},
+                                      {"type": "input", "ref": "saveapsettings.networkmask", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #030303;\nheight: 2rem;\nwidth: 17.75rem;"}
+                                    ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 435px;"},
+                                  {"classes": "card", "layout": [
                                       {"format": "New Name"},
                                       {"type": "input", "ref": "saveapsettings.name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
                                     ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 433px;"},
@@ -223,10 +237,9 @@
                                       {"type": "input", "ref": "saveapsettings.password", "__label": "input", "css": "flex: 0 0 auto;\ncolor: #050505;\nheight: 2rem;\nwidth: 17.75rem;", "input": "password"}
                                     ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 430px;"}
                                 ], "__label": "stats"}
-                            ], "__label": "stats"},
-                          {"type": "savebutton", "title": "Set", "icon": "save", "ref": "saveapsettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 431px;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 458px;\nwidth: 464px;"}
-                    ], "css": "flex: 0 0 auto;\nheight: 483px;\nwidth: 490px;"}
+                            ], "__label": "stats"}
+                        ], "css": "flex: 0 0 auto;\nheight: 539.796875px;\nwidth: 464px;"}
+                    ], "css": "flex: 0 0 auto;\nheight: 561.796875px;\nwidth: 490px;"}
                 ]},
               {"classes": "card", "layout": [
                   {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
@@ -234,6 +247,7 @@
                           {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
                         ]}}, "layout": [
                       {"classes": "title", "format": "STA Network", "css": "height: 2.1123046875rem;"},
+                      {"type": "savebutton", "title": "Set", "icon": "save", "ref": "savestasettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 515px;"},
                       {"classes": "container", "css": "flex-wrap: wrap;\ngap: 0.5rem;", "layout": [
                           {"classes": "card", "layout": [
                               {"format": "Current", "css": "height: 1.1875rem;"},
@@ -246,65 +260,85 @@
                         ], "css": "flex: 0 0 auto;\nheight: 79px;\nwidth: 516px;"},
                       {"classes": "card", "layout": [
                           {"format": "New Name"},
-                          {"type": "input", "ref": "savestasettings.Name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
+                          {"type": "input", "ref": "savestasettings.Name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;", "disabled": "${savestasettings.SSIDNoId} > 0"}
                         ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 513px;"},
                       {"classes": "card", "layout": [
                           {"format": "Password"},
                           {"type": "input", "ref": "savestasettings.Password", "__label": "input", "css": "flex: 0 0 auto;\ncolor: #050505;\nheight: 2rem;\nwidth: 17.75rem;", "input": "password"}
-                        ], "css": "flex: 0 0 auto;\nheight: 84px;\nwidth: 515px;"},
-                      {"type": "savebutton", "title": "Set", "icon": "save", "ref": "savestasettings", "__label": "savebutton", "css": "flex: 0 0 auto;\nheight: 3rem;\nwidth: 515px;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 84px;\nwidth: 515px;"}
                     ], "css": "flex: 0 0 auto;\nheight: 462px;\nwidth: 545px;"}
-                ], "css": "flex: 0 0 auto;\nheight: 484px;\nwidth: 571px;"},
+                ], "css": "flex: 0 0 auto;\nheight: 560px;\nwidth: 571px;"},
               {"classes": "card", "layout": [
                   {"classes": "panel", "api": {"save_event": {"type": "action"}, "events": {"type": "custom", "value": [
                           {"id": 0, "timestamp": 12345, "message": "Something failed", "priority": 2, "status": "active", "notes": "some notes"},
                           {"id": 1, "timestamp": 12395, "message": "Something succeeded", "priority": 1, "status": "processed", "notes": ""}
                         ]}}, "layout": [
-                      {"type": "action", "title": "Scan Networks", "icon": "refresh", "ref": "scannetworks", "css": "flex: 0 0 auto;\nheight: 46px;\nwidth: 998px;", "trigger_on_press_and_release": false},
+                      {"type": "action", "title": "Scan Wifi Networks", "icon": "refresh", "ref": "scannetworks", "css": "flex: 0 0 auto;\nheight: 46px;\nwidth: 998px;", "trigger_on_press_and_release": false},
                       {"classes": "container", "layout": [
                           {"format": "ID", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
                           {"format": "SSID", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
                           {"format": "RSSI", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
                           {"format": "Channel", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"},
                           {"format": "Auth", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1.1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1011px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
                       {"classes": "container", "layout": [
                           {"format": "1", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net1_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net1_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net1_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net1_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 0 ? 'visible' : 'hidden'};", "ref": "stanetworks.networkFound"},
                       {"classes": "container", "layout": [
                           {"format": "2", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net2_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net2_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net2_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net2_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 1 ? 'visible' : 'hidden'};"},
                       {"classes": "container", "layout": [
                           {"format": "3", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net3_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net3_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net3_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net3_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 28px;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1006px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 2 ? 'visible' : 'hidden'};"},
                       {"classes": "container", "layout": [
                           {"format": "4", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net4_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net4_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net4_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net4_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1007px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"},
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 3 ? 'visible' : 'hidden'};"},
                       {"classes": "container", "layout": [
                           {"format": "5", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net5_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net5_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net5_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
                           {"format": "${stanetworks.net5_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
-                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1007px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;"}
-                    ], "css": "flex: 0 0 auto;\nheight: 299px;\nwidth: 1044px;"}
-                ], "css": "flex: 0 0 auto;\nheight: 321px;\nwidth: 1070px;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 4 ? 'visible' : 'hidden'};"},
+                      {"classes": "container", "layout": [
+                          {"format": "6", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net6_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net6_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net6_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net6_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 5 ? 'visible' : 'hidden'};"},
+                      {"classes": "container", "layout": [
+                          {"format": "7", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net7_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net7_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net7_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net7_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 6 ? 'visible' : 'hidden'};"},
+                      {"classes": "container", "layout": [
+                          {"format": "8", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 73px;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net8_ssid}", "css": "flex: 0 0 auto;\nbackground: #ece4e4;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 26rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net8_rssi}", "css": "flex: 0 0 auto;\nbackground: #f2eeee;\nborder: 1px solid #252323;\nheight: 1.75rem;\nwidth: 8.75rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net8_channel}", "css": "flex: 0 0 auto;\nbackground: #fcfcfc;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 8.25rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"},
+                          {"format": "${stanetworks.net8_auth}", "css": "flex: 0 0 auto;\nbackground: #f3eded;\nborder: 1px solid #242323;\nheight: 1.75rem;\nwidth: 15rem;\ncolor: #27252d;\nfont-weight: bold;\nfont-size: 1rem;"}
+                        ], "css": "flex: 0 0 auto;\nheight: 1.875rem;\nwidth: 1009px;\nborder: 0px solid #fdf7f7;\nbackground: #323238;\nvisibility: ${stanetworks.networkFound > 7 ? 'visible' : 'hidden'};"}
+                    ], "css": "flex: 0 0 auto;\nheight: 411px;\nwidth: 1044px;"}
+                ], "css": "flex: 0 0 auto;\nheight: 435px;\nwidth: 1070px;"}
             ], "__label": "stats"}
         ], "level": "5"}
     ], 

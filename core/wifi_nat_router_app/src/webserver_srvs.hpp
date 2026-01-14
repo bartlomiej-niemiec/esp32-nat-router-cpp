@@ -86,7 +86,6 @@ WifiNetwork> m_ScannedNetworks;
             int  *rssi;
             int  *channel;
             char *auth;
-            char *visibility;
         };
         
 };
