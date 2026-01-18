@@ -120,31 +120,31 @@ public:
         {
             case WifiNatRouterState::STARTED:
             {
-                return "WifiNatRouter started";
+                return "WifiNatRouter Started";
             }
             break;
 
             case WifiNatRouterState::CONNECTING:
             {
-                return "WifiNatRouter connecting";
+                return "WifiNatRouter Connecting";
             }
             break;
 
             case WifiNatRouterState::RUNNING:
             {
-                return "WifiNatRouter running";
+                return "WifiNatRouter Running";
             }
             break;
 
             case WifiNatRouterState::STOPPED:
             {
-                return "WifiNatRouter stopped";
+                return "WifiNatRouter Stopped";
             }
             break;
 
             case WifiNatRouterState::STOPPING:
             {
-                return "WifiNatRouter stopping";
+                return "WifiNatRouter Stopping";
             }
             break; 
 

@@ -1,7 +1,8 @@
 #include "wifi_nat_router_app.hpp"
 
+#include "data_storer_if/data_storer.hpp"
+
 extern "C" void app_main(void)
 {
-    WifiNatRouter::Init();
-    WifiNatRouter::Startup();
+    DataStorage::DataStorer::Init();
 }

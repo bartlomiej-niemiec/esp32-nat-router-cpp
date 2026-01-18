@@ -1,6 +1,6 @@
 #include "network_config_manager.hpp"
 #include "esp_log.h"
-#include "config.hpp"
+#include "wifi_nat_router_app_config.hpp"
 
 NetworkConfigManager::NetworkConfigManager():
     m_DataStorer(DataStorage::DataStorer::GetInstance())

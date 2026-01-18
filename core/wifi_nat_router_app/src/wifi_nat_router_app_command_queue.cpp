@@ -1,0 +1,34 @@
+#include "wifi_nat_router_app_command_queue.hpp"
+
+namespace WifiNatRouterApp
+{
+
+WifiNatRouterAppCommandQueue::WifiNatRouterAppCommandQueue():
+    m_MessageQueue(),
+    m_QueueStorage(),
+    m_MessageQueueBuffer()
+{
+    m_MessageQueue = xQueueCreateStatic(MESSAGE_QUEUE_SIZE, sizeof(Message), m_MessageQueueBuffer, &m_QueueStorage);
+    assert(nullptr != m_MessageQueue);
+}
+
+WifiNatRouterAppCommandQueue::~WifiNatRouterAppCommandQueue()
+{
+    vQueueDelete(m_MessageQueue);
+}
+
+bool WifiNatRouterAppCommandQueue::Add(const Message & msg)
+{
+    return xQueueSend(m_MessageQueue, &msg, 0) == pdTRUE;
+}
+
+bool WifiNatRouterAppCommandQueue::Receive(Message & msg)
+{
+    return xQueueReceive(
+        m_MessageQueue,
+        &msg,
+        portMAX_DELAY
+    ) == pdTRUE;
+}
+
+}

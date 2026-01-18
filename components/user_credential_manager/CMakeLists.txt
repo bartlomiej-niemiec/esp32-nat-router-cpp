@@ -4,5 +4,5 @@ idf_component_register(
                         SRCS "./src/user.cpp"
                              "./src/user_credential_manager_impl.cpp"
                         INCLUDE_DIRS "./include"
-                        PRIV_REQUIRES data_storer_if wifi_nat_router_config
+                        PRIV_REQUIRES data_storer_if
                     )

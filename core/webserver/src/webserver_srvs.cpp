@@ -26,7 +26,7 @@ bool WebServerServices::m_ApNetworkConfigSaved{false};
 bool WebServerServices::m_StaNetworkConfigSaved{false};
 bool WebServerServices::m_ConfigChangeInProgress{false};
 bool WebServerServices::m_IsInternetAvailable{false};
-std::unique_ptr<InternetAccessChecker> WebServerServices::m_IAchecker{nullptr};
+std::unique_ptr<InternetActivityMonitor> WebServerServices::m_IAchecker{nullptr};
 esp_timer_handle_t WebServerServices::m_InternetCheckerTimer{nullptr};
 
 void WebServerServices::Init(
@@ -55,7 +55,7 @@ void WebServerServices::Init(
         m_pNetworkConfigManager = pNetworkConfigManager;
     }
 
-    m_IAchecker = std::make_unique<InternetAccessChecker>(InternetAccessCb);
+    m_IAchecker = std::make_unique<InternetActivityMonitor>(InternetAccessCb);
 
     esp_timer_create_args_t internetAccessTimerArgs = {
         .callback = InternetCheckerTimerCb,
@@ -101,7 +101,7 @@ void WebServerServices::GetApSetting(saveapsettings * settings)
     static_assert(WifiNatRouter::WifiNatRouterHelpers::MAX_IP_ADDRESS_STRING_SIZE <= sizeof(settings->networkmask));
 
     WifiNatRouter::AccessPointConfig apConfig = m_pNetworkConfigManager->GetApConfig();
-    strncpy(settings->name, apConfig.ssid.data() ,sizeof(settings->name));
+    strncpy(settings->name, apConfig.ssid.data() ,sizeof(settings->name) - 1);
     WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->ipaddress, apConfig.ipAddress);
     WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->networkmask, apConfig.networkmask);
 }
@@ -206,11 +206,11 @@ void WebServerServices::GetStaScannedNetworks(stanetworks * networks)
 
         for (size_t i = 0; i < noNetworksFound; i++) {
             const auto &w = m_ScannedNetworks[i];
-            strncpy(nets[i].ssid, w.ssid.data(), 31);
+            strncpy(nets[i].ssid, w.ssid.data(), sizeof(networks->net1_ssid) - 1);
             *nets[i].rssi    = w.rssi;
             *nets[i].channel = w.channel;
             strncpy(nets[i].auth,
-                    WifiNatRouter::getAuthString(w.auth).data(), 31);
+                    WifiNatRouter::getAuthString(w.auth).data(), sizeof(networks->net1_auth) - 1);
         }
     
     }
@@ -267,13 +267,13 @@ StaConfig staConfig = m_pNetworkConfigManager->GetStaConfig();
     WifiNatRouter::
 AccessPointConfig apConfig = m_pNetworkConfigManager->GetApConfig();
     
-    strncpy(info->AP, apConfig.ssid.data() ,sizeof(info->AP));
-    strncpy(info->STA, staConfig.ssid.data() ,sizeof(info->STA));
+    strncpy(info->AP, apConfig.ssid.data() ,sizeof(info->AP) - 1);
+    strncpy(info->STA, staConfig.ssid.data() ,sizeof(info->STA) - 1);
 
     WifiNatRouter::
 WifiNatRouterState state = m_pWifiNatRouter->GetState();
     strncpy(info->State, WifiNatRouter::
-WifiNatRouterHelpers::WifiNatRouterStaToString(state).data(), sizeof(info->State));
+WifiNatRouterHelpers::WifiNatRouterStaToString(state).data(), sizeof(info->State) - 1);
 
     info->Clients = m_pWifiNatRouter->GetNoClients();
     info->StaConn = state == WifiNatRouter::
@@ -325,7 +325,7 @@ WifiNatRouterConfig::printConfig(newConfig);
     }
 }
         
-bool WebServerServices::IsNewSavedAndDifferent(void)
+bool WebServerServices::IsApplyDisabled(void)
 {
     WifiNatRouter::
 WifiNatRouterState natRouterState = m_pWifiNatRouter->GetState();
@@ -393,10 +393,13 @@ WifiNatRouterState event)
         case WifiNatRouter::WifiNatRouterState::RUNNING:
         {
             m_IAchecker->Check();
-            ESP_ERROR_CHECK(esp_timer_start_periodic(
-                m_InternetCheckerTimer,
-                10000000 //10s
-            ));
+            if (!esp_timer_is_active(m_InternetCheckerTimer))
+            {
+                ESP_ERROR_CHECK(esp_timer_start_periodic(
+                    m_InternetCheckerTimer,
+                    10000000 //10s
+                ));
+            }
         }
         break;
 

@@ -11,7 +11,7 @@ void WebServer::WebServerMain(void *pArg) {
     mongoose_set_http_handlers("scannetworks", WebServerServices::IsStaScannningInProgress, WebServerServices::StartStaScannningNetworks);
     mongoose_set_http_handlers("saveapsettings", WebServerServices::GetApSetting, WebServerServices::SetApSetting);
     mongoose_set_http_handlers("savestasettings", WebServerServices::GetStaSettings, WebServerServices::SetStaSetings);
-    mongoose_set_http_handlers("applynetworkconfig", WebServerServices::IsNewSavedAndDifferent, WebServerServices::StartWifiNatRouterWithNewConfig);
+    mongoose_set_http_handlers("applynetworkconfig", WebServerServices::IsApplyDisabled, WebServerServices::StartWifiNatRouterWithNewConfig);
     mongoose_set_http_handlers("login", WebServerServices::GetLogin, WebServerServices::SetLogin);
     mg_log_set(MG_LL_DEBUG);    // Set log level to debug
     for(;;) {                   // Infinite event loop

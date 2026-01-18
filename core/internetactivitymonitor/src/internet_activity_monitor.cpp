@@ -1,8 +1,8 @@
-#include "internet_access_checker.hpp"
+#include "internet_activity_monitor/internet_activity_monitor.hpp"
 #include "esp_task.h"
 
-InternetAccessChecker::InternetAccessChecker(const InternetAccessCallback & cb):
-    m_Cb(cb),
+InternetActivityMonitor::InternetActivityMonitor(const WifiNatRouterApp::WifiNatRouterAppIf & rWifiNatRouterIf):
+    m_rWifiNatRouterIf(rWifiNatRouterIf),
     m_runnning(false),
     m_ping_timeout_count(0),
     m_ping_success_count(0)
@@ -25,12 +25,16 @@ InternetAccessChecker::InternetAccessChecker(const InternetAccessCallback & cb):
     ));
 }
 
-InternetAccessChecker::~InternetAccessChecker()
+InternetActivityMonitor::~InternetActivityMonitor()
 {
+    if(m_runnning)
+    {
+        esp_ping_stop(m_InternetAccessPingHandle);
+    }
     esp_ping_delete_session(m_InternetAccessPingHandle);
 }
 
-bool InternetAccessChecker::Check()
+bool InternetActivityMonitor::Check()
 {
     if (m_runnning) return true;
 

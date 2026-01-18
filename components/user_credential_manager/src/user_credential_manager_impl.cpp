@@ -1,7 +1,7 @@
 #include "user_credential_manager/user_credential_manager.hpp"
+#include "user_credential_manager/user_credential_manager_config.hpp"
 #include <data_storer_if/data_storer.hpp>
 #include <algorithm>
-#include "config.hpp"
 
 namespace UserCredential
 {

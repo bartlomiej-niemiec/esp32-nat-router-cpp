@@ -11,8 +11,8 @@ set(EXTRA_COMPONENT_DIRS
     ${CMAKE_SOURCE_DIR}/components/rgbled/rgbled_if
     ${CMAKE_SOURCE_DIR}/components/data_storer/data_storer_if
     ${CMAKE_SOURCE_DIR}/components/user_credential_manager
+    ${CMAKE_SOURCE_DIR}/core/internetactivitymonitor
     ${CMAKE_SOURCE_DIR}/core/wifi_nat_router_app
-    ${CMAKE_SOURCE_DIR}/core/wifi_nat_router_config
 )
 
 if("${DataStorerImpl}" STREQUAL "Nvs")

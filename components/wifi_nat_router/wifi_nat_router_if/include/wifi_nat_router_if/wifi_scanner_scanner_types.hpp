@@ -6,6 +6,7 @@
 #include <array>
 #include <functional>
 #include "esp_log.h"
+#include <algorithm>
 
 namespace WifiNatRouter
 {
@@ -24,6 +25,8 @@ struct WifiNetwork {
     uint8_t               channel{};
     AuthMode              auth{};
 
+    WifiNetwork() = default;
+
     WifiNetwork(const uint8_t * pssid,
         const uint8_t ssid_size,
         const uint8_t * pbssid,
@@ -34,10 +37,15 @@ struct WifiNetwork {
     )
     {
         assert(ssid_size <= MAX_SSID_SIZE);
-        memcpy(ssid.data(), pssid, ssid_size);
+        int size = std::min((int)ssid_size, MAX_SSID_SIZE - 1);
+        memcpy(ssid.data(), pssid, size);
+        ssid[size] = '\0';
+
 
         assert(bssid_size <= MAX_BSSID_SIZE);
-        memcpy(bssid.data(), pbssid, bssid_size);
+        size = std::min((int)bssid_size, MAX_BSSID_SIZE - 1);
+        memcpy(bssid.data(), pbssid, size);
+        bssid[size] = '\0';
 
         this->rssi = rssi;
         this->channel = channel;

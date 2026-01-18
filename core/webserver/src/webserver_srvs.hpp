@@ -44,7 +44,7 @@ WifiNatRouterIf * pWifiNatRouterIf,
 
         static void StartWifiNatRouterWithNewConfig(struct mg_str body);
         
-        static bool IsNewSavedAndDifferent(void);
+        static bool IsApplyDisabled(void);
 
         static void GetWifiNatRouterInfo(info * info);
 
@@ -93,7 +93,7 @@ WifiNetwork> m_ScannedNetworks;
         
         static bool m_IsInternetAvailable;
         static void InternetAccessCb(bool IsInternetAccess);
-        static std::unique_ptr<InternetAccessChecker> m_IAchecker;
+        static std::unique_ptr<InternetActivityMonitor> m_IAchecker;
         static esp_timer_handle_t m_InternetCheckerTimer;
         static void InternetCheckerTimerCb(void * pArgs);
 
