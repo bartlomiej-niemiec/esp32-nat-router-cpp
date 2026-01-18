@@ -99,14 +99,18 @@ void WifiNatRouterAppImpl::MainLoop(void *pArg)
 void WifiNatRouterAppImpl::ProcessEventQueue()
 {
     WifiNatRouterAppEventQueue::Message msg;
-
     if (m_EventQueue.Receive(msg))
     {
+
         switch (msg.event)
         {
             case WifiNatRouterAppEventQueue::WifiNatRouterEvent::RouterState:
             {
-                m_pLed->Update(msg.newState);
+                if(m_pLed)
+                {
+                    m_pLed->Update(msg.newState);
+                }
+
                 m_CachedAppSnapshot.routerState = msg.newState;
                 if (m_NewConfigInProgress && msg.newState == WifiNatRouter::WifiNatRouterState::CONNECTING)
                 {

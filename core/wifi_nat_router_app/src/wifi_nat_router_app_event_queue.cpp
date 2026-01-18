@@ -27,7 +27,7 @@ bool WifiNatRouterAppEventQueue::Receive(Message & msg)
     return xQueueReceive(
         m_MessageQueue,
         &msg,
-        portMAX_DELAY
+        0
     ) == pdTRUE;
 }
 

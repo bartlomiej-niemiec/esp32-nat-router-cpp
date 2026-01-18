@@ -40,6 +40,17 @@ struct AppSnapshot{
     bool configApplyInProgress;
     bool internetAccess;
     int noApClients;
+
+    bool operator==(const AppSnapshot& o) const {
+        return config == o.config &&
+                routerState == o.routerState &&
+                scannedNetworks == o.scannedNetworks &&
+                scannedCount == o.scannedCount &&
+                scanState == o.scanState &&
+                configApplyInProgress == o.configApplyInProgress &&
+                internetAccess == o.internetAccess &&
+                noApClients == o.noApClients;
+    }
 };
 
 

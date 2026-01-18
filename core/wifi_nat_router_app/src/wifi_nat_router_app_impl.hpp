@@ -61,6 +61,7 @@ class WifiNatRouterAppImpl:
                             false
                         )
                     );
+                    ESP_LOGI("EventQueue", "Adding new event");
                 };
 
             private:

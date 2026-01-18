@@ -52,6 +52,15 @@ struct WifiNetwork {
         this->auth = auth;
     }
 
+    bool operator==(const WifiNetwork& o) const {
+        return ssid == o.ssid &&
+               bssid == o.bssid &&
+               rssi == o.rssi &&
+               channel == o.channel &&
+               auth == o.auth;
+    }
+    bool operator!=(const WifiNetwork& o) const { return !(*this == o); }
+
 };
 
 static const std::string_view getAuthString(AuthMode auth)

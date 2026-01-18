@@ -264,11 +264,15 @@ WifiNatRouterState::STARTED)
 
 void WebServerServices::Update()
 {
-    std::memcpy(&m_PrevAppSnapshot, &m_AppSnapshot, sizeof(WifiNatRouterApp::AppSnapshot));
+    if (m_pWifiNatRouterAppIf == nullptr) {
+        return;
+    }
+
+    m_PrevAppSnapshot = m_AppSnapshot;
     m_pWifiNatRouterAppIf->TryGetSnapshot(m_AppSnapshot);
 
     if (!m_RefreshRequired){
-        m_RefreshRequired = memcmp(&m_PrevAppSnapshot, &m_AppSnapshot, sizeof(WifiNatRouterApp::AppSnapshot)) == 0;
+        m_RefreshRequired = !(m_PrevAppSnapshot == m_AppSnapshot);
     }
 
     if (m_NewConfigPendingInProgress && m_AppSnapshot.configApplyInProgress && !m_PrevAppSnapshot.configApplyInProgress)
