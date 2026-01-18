@@ -1,8 +1,8 @@
-#include "internet_activity_monitor/internet_activity_monitor.hpp"
+#include "internet_activity_monitor.hpp"
 #include "esp_task.h"
 
-InternetActivityMonitor::InternetActivityMonitor(const WifiNatRouterApp::WifiNatRouterAppIf & rWifiNatRouterIf):
-    m_rWifiNatRouterIf(rWifiNatRouterIf),
+InternetActivityMonitor::InternetActivityMonitor(WifiNatRouterApp::WifiNatRouterAppEventQueue & rEventQueue):
+    m_rEventQueue(rEventQueue),
     m_runnning(false),
     m_ping_timeout_count(0),
     m_ping_success_count(0)

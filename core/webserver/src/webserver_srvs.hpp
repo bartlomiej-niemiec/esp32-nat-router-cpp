@@ -1,26 +1,18 @@
 #pragma once
 
-#include "network_config_manager.hpp"
 #include "user_credential_manager/user_credential_manager.hpp"
 #include "wifi_nat_router_if/wifi_nat_router_if.hpp"
-#include "wifi_event_monitor.hpp"
-
-#include "internet_access_checker.hpp"
-#include <memory>
-
 #include "mongoose/mongoose_glue.h"
+
 #include <atomic>
+#include <memory>
 
 class WebServerServices
 {
 
     public:
 
-        static void Init(UserCredential::UserCredentialManager * pUserCredentialManager,
-                        WifiNatRouter::
-WifiNatRouterIf * pWifiNatRouterIf,
-                        NetworkConfigManager * pNetworkConfigManager,
-                        WifiEventMonitor * pWifiEventMonito);
+        static void Init(WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterAppIf);
 
         static int AuthenticateUser(const char *user, const char *pass);
         
@@ -53,36 +45,18 @@ WifiNatRouterIf * pWifiNatRouterIf,
         static void StartSaveEvent(mg_str params);
 
         static bool IsSaveEventFinished();
-        
+
+        static void Update();
+
+        static void Refresh();
 
     private:
 
-        static UserCredential::UserCredentialManager * m_pUserCredentialManager;
+        static WifiNatRouterApp::WifiNatRouterAppIf * m_pWifiNatRouterAppIf;
 
-        static WifiNatRouter::
-WifiNatRouterIf * m_pWifiNatRouter;
-
-        static NetworkConfigManager * m_pNetworkConfigManager;
-
-        static WifiNatRouter::
-AccessPointConfig m_PendingApConfig;
-
-        static WifiNatRouter::
-StaConfig m_PendingStaConfig;
-
-        static bool m_ApNetworkConfigSaved;
-        static bool m_StaNetworkConfigSaved;
-
-        static void WifiScannerCb(WifiNatRouter::
-ScannerState state);
-
-        static void WifiEventCb(WifiNatRouter::
-WifiNatRouterState event);
-        static bool m_ConfigChangeInProgress;
-
-        static std::atomic<bool> m_ScanningRequested;
-        static std::vector<WifiNatRouter::
-WifiNetwork> m_ScannedNetworks;
+        static WifiNatRouterApp::AppSnapshot m_PrevAppSnapshot;
+        static WifiNatRouterApp::AppSnapshot m_AppSnapshot;
+        static bool m_RefreshRequired;
 
         struct NetView {
             char *ssid;
@@ -91,10 +65,5 @@ WifiNetwork> m_ScannedNetworks;
             char *auth;
         };
         
-        static bool m_IsInternetAvailable;
-        static void InternetAccessCb(bool IsInternetAccess);
-        static std::unique_ptr<InternetActivityMonitor> m_IAchecker;
-        static esp_timer_handle_t m_InternetCheckerTimer;
-        static void InternetCheckerTimerCb(void * pArgs);
 
 };

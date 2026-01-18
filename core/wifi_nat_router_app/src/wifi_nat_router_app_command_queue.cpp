@@ -8,7 +8,7 @@ WifiNatRouterAppCommandQueue::WifiNatRouterAppCommandQueue():
     m_QueueStorage(),
     m_MessageQueueBuffer()
 {
-    m_MessageQueue = xQueueCreateStatic(MESSAGE_QUEUE_SIZE, sizeof(Message), m_MessageQueueBuffer, &m_QueueStorage);
+    m_MessageQueue = xQueueCreateStatic(MESSAGE_QUEUE_SIZE, sizeof(Command), m_MessageQueueBuffer, &m_QueueStorage);
     assert(nullptr != m_MessageQueue);
 }
 
@@ -17,12 +17,12 @@ WifiNatRouterAppCommandQueue::~WifiNatRouterAppCommandQueue()
     vQueueDelete(m_MessageQueue);
 }
 
-bool WifiNatRouterAppCommandQueue::Add(const Message & msg)
+bool WifiNatRouterAppCommandQueue::Add(const Command & msg)
 {
     return xQueueSend(m_MessageQueue, &msg, 0) == pdTRUE;
 }
 
-bool WifiNatRouterAppCommandQueue::Receive(Message & msg)
+bool WifiNatRouterAppCommandQueue::Receive(Command & msg)
 {
     return xQueueReceive(
         m_MessageQueue,

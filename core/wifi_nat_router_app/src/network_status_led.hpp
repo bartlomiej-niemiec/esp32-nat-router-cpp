@@ -30,7 +30,6 @@ WifiNatRouterState state);
             SOLID,
             BLINK
         };
-
         
         struct SolidConfig {
             RgbLed::RgbColor color;

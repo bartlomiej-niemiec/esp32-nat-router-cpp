@@ -1,5 +1,7 @@
 #pragma once
 
+#include "wifi_nat_router_app_if.hpp"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -15,7 +17,7 @@ class WebServer
 
         static WebServer & GetInstance();
 
-        void Startup();
+        void Startup(WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterAppIf);
 
         ~WebServer();
 
@@ -35,6 +37,8 @@ class WebServer
         static constexpr std::string_view m_pTaskName = "WebServerTask";
 
         std::atomic_bool m_WebServerThreadRunning;
+
+        WifiNatRouterApp::WifiNatRouterAppIf * m_pWifiNatRouterAppIf;
 
         TaskHandle_t m_WebServerTaskHandle;
         

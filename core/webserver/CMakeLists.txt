@@ -4,5 +4,6 @@ idf_component_register(
                         SRCS    "./src/webserver.cpp"
                                 "./src/webserver_srvcs.cpp"
                         INCLUDE_DIRS "./include"
-                        REQUIRES    lwip
+                        REQUIRES        lwip
+                                        wifi_nat_router_app
                     )

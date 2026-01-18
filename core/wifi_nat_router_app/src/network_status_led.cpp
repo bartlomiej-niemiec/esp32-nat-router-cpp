@@ -14,8 +14,7 @@ NetworkStatusLed::NetworkStatusLed(uint32_t gpio_pin_num)
 }
 
 
-void NetworkStatusLed::Update(WifiNatRouter::
-WifiNatRouterState state)
+void NetworkStatusLed::Update(WifiNatRouter::WifiNatRouterState state)
 {
     std::visit(
         Visitor2{

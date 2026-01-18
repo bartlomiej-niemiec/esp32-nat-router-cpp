@@ -11,67 +11,22 @@
 #include <string_view>
 #include <algorithm>
 
-UserCredential::UserCredentialManager * WebServerServices::m_pUserCredentialManager = nullptr;
-WifiNatRouter::
-WifiNatRouterIf * WebServerServices::m_pWifiNatRouter = nullptr;
-NetworkConfigManager * WebServerServices::m_pNetworkConfigManager = nullptr;
-std::atomic<bool> WebServerServices::m_ScanningRequested = false;
-std::vector<WifiNatRouter::
-WifiNetwork> WebServerServices::m_ScannedNetworks{};
-WifiNatRouter::
-AccessPointConfig WebServerServices::m_PendingApConfig{};
-WifiNatRouter::
-StaConfig WebServerServices::m_PendingStaConfig{};
+
 bool WebServerServices::m_ApNetworkConfigSaved{false};
 bool WebServerServices::m_StaNetworkConfigSaved{false};
-bool WebServerServices::m_ConfigChangeInProgress{false};
-bool WebServerServices::m_IsInternetAvailable{false};
-std::unique_ptr<InternetActivityMonitor> WebServerServices::m_IAchecker{nullptr};
-esp_timer_handle_t WebServerServices::m_InternetCheckerTimer{nullptr};
+WifiNatRouterApp::WifiNatRouterAppIf * WebServerServices::m_pWifiNatRouterAppIf{nullptr};
+WifiNatRouterApp::AppSnapshot WebServerServices::m_AppSnapshot{};
+WifiNatRouterApp::AppSnapshot WebServerServices::m_PrevAppSnapshot{};
+bool WebServerServices::m_RefreshRequired{false};
 
-void WebServerServices::Init(
-                        UserCredential::UserCredentialManager * pUserCredentialManager,
-                        WifiNatRouter::WifiNatRouterIf * pWifiNatRouterIf,
-                        NetworkConfigManager * pNetworkConfigManager,
-                        WifiEventMonitor * pWifiEventMonitor
-                    )
+
+void WebServerServices::Init(WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterAppIf);
 {
-    assert(nullptr != pUserCredentialManager);
-    if (m_pUserCredentialManager == nullptr)
+    assert(nullptr != pWifiNatRouterAppIf);
+    if (m_pWifiNatRouterAppIf == nullptr)
     {
-        m_pUserCredentialManager = pUserCredentialManager;
+        m_pWifiNatRouterAppIf = pWifiNatRouterAppIf;
     }
-
-    assert(nullptr != pWifiNatRouterIf);
-    if (m_pWifiNatRouter == nullptr)
-    {
-        m_pWifiNatRouter = pWifiNatRouterIf;
-        m_pWifiNatRouter->GetScanner()->RegisterStateListener(WifiScannerCb);
-    }
-
-    assert(nullptr != pNetworkConfigManager);
-    if (m_pNetworkConfigManager == nullptr)
-    {
-        m_pNetworkConfigManager = pNetworkConfigManager;
-    }
-
-    m_IAchecker = std::make_unique<InternetActivityMonitor>(InternetAccessCb);
-
-    esp_timer_create_args_t internetAccessTimerArgs = {
-        .callback = InternetCheckerTimerCb,
-        .arg = nullptr,
-        .dispatch_method = ESP_TIMER_TASK,
-        .name = "InternetCheckerTimer",
-        .skip_unhandled_events = true
-    };
-
-    ESP_ERROR_CHECK(esp_timer_create(
-        &internetAccessTimerArgs,
-        &m_InternetCheckerTimer
-    ));  
-
-    assert(nullptr != pWifiEventMonitor);
-    pWifiEventMonitor->Subscribe(WifiEventCb);
 }
 
 int WebServerServices::AuthenticateUser(const char *user, const char *pass)
@@ -99,21 +54,16 @@ void WebServerServices::GetApSetting(saveapsettings * settings)
 {
     static_assert(WifiNatRouter::WifiNatRouterHelpers::MAX_IP_ADDRESS_STRING_SIZE <= sizeof(settings->ipaddress));
     static_assert(WifiNatRouter::WifiNatRouterHelpers::MAX_IP_ADDRESS_STRING_SIZE <= sizeof(settings->networkmask));
-
-    WifiNatRouter::AccessPointConfig apConfig = m_pNetworkConfigManager->GetApConfig();
-    strncpy(settings->name, apConfig.ssid.data() ,sizeof(settings->name) - 1);
-    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->ipaddress, apConfig.ipAddress);
-    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->networkmask, apConfig.networkmask);
+    strncpy(settings->name, m_AppSnapshot.config.apConfig.ssid.data() ,sizeof(settings->name) - 1);
+    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->ipaddress, m_AppSnapshot.config.apConfig.ipAddress);
+    WifiNatRouter::WifiNatRouterHelpers::ConvertU32ToIpAddressString(settings->networkmask, m_AppSnapshot.config.apConfig.networkmask);
 }
 
 void WebServerServices::SetApSetting(saveapsettings * settings)
 {
-    if (m_ConfigChangeInProgress) return;
+    if (m_AppSnapshot.configApplyInProgress) return;
 
     if (static_cast<uint8_t>(strnlen(settings->password, sizeof(settings->password))) < ESP_IDF_MINIMAL_PASSWORD_SIZE) return;
-
-    static_assert(m_PendingApConfig.ssid.max_size() >= sizeof(settings->name));
-    static_assert(m_PendingApConfig.password.max_size() >= sizeof(settings->password));
 
     std::string_view ssid(settings->name);
     std::string_view password(settings->password);
@@ -126,11 +76,13 @@ WifiNatRouterHelpers::ConvertStringToIpAddress(settings->ipaddress, ipAddress)) 
     if (!WifiNatRouter::
 WifiNatRouterHelpers::ConvertStringToIpAddress(settings->networkmask, netMask)) return;
 
+    WifiNatRouter::AccessPointConfig pendingApConfig(ssid, password, ipAddress, netMask);
 
-    m_PendingApConfig = WifiNatRouter::
-AccessPointConfig(ssid, password, ipAddress, netMask);
-
-    m_ApNetworkConfigSaved = true;
+    if (pendingApConfig != m_AppSnapshot.config.apConfig)
+    {
+        
+        m_ApNetworkConfigSaved = true;
+    }
 }
 
 void WebServerServices::GetLogin(login * loginData)
@@ -364,61 +316,22 @@ AccessPointConfig & actualApConfig = m_pNetworkConfigManager->GetApConfig();
     return !(isApConfigHasChanged || isStaConfigHasChanged);
 }
 
-void WebServerServices::WifiEventCb(WifiNatRouter::
-WifiNatRouterState event)
+void WebServerServices::Update()
 {
-    switch (event)
-    {
-        case WifiNatRouter::WifiNatRouterState::NEW_CONFIGURATION_PENDING:
-        {
-            if(esp_timer_is_active(m_InternetCheckerTimer))
-            {
-                esp_timer_stop(m_InternetCheckerTimer);
-            }
-        }
-        break;
+    std::memcpy(&m_PrevAppSnapshot, &m_AppSnapshot, sizeof(WifiNatRouterApp::AppSnapshot));
+    m_pWifiNatRouterAppIf->TryGetSnapshot(m_AppSnapshot);
 
-        case WifiNatRouter::WifiNatRouterState::CONNECTING:
-        {
-            if (m_ConfigChangeInProgress)
-            {
-                m_ConfigChangeInProgress = false;
-                m_StaNetworkConfigSaved = false;
-                m_ApNetworkConfigSaved = false;
-                glue_update_state();
-            }
-        }
-        break;
-
-        case WifiNatRouter::WifiNatRouterState::RUNNING:
-        {
-            m_IAchecker->Check();
-            if (!esp_timer_is_active(m_InternetCheckerTimer))
-            {
-                ESP_ERROR_CHECK(esp_timer_start_periodic(
-                    m_InternetCheckerTimer,
-                    10000000 //10s
-                ));
-            }
-        }
-        break;
-
-        default:
-            break;
+    if (!m_RefreshRequired){
+        m_RefreshRequired = memcmp(&m_PrevAppSnapshot, &m_AppSnapshot, sizeof(WifiNatRouterApp::AppSnapshot)) == 0;
     }
 }
 
-
-void WebServerServices::InternetAccessCb(bool IsInternetAccess)
+void WebServerServices::Refresh()
 {
-    if (IsInternetAccess != m_IsInternetAvailable)
+    if (m_RefreshRequired)
     {
-        m_IsInternetAvailable = IsInternetAccess;
         glue_update_state();
+        m_RefreshRequired = false;
     }
 }
 
-void WebServerServices::InternetCheckerTimerCb(void * pArgs)
-{
-    m_IAchecker->Check();
-}

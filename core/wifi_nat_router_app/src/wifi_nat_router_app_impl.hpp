@@ -12,7 +12,12 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "internet_activity_monitor.hpp"
+
+#include "esp_timer.h"
+
 #include <string_view>
+#include <optional>
 
 namespace WifiNatRouterApp
 {
@@ -31,13 +36,9 @@ class WifiNatRouterAppImpl:
             WifiNatRouter::WifiNatRouterIf & rWifiIf
         );
 
-        bool SendCommand(const Command & cmd) const{
-            return false;
-        };
+        bool SendCommand(const Command & cmd);
 
-        bool TryGetSnapshot(AppSnapshot& out) const{
-            return false;
-        };
+        bool TryGetSnapshot(AppSnapshot& out) const;
 
     private:
         
@@ -76,12 +77,21 @@ class WifiNatRouterAppImpl:
         WifiNatRouterAppEventQueue m_EventQueue;
         WifiNatRouterAppCommandQueue m_CommandQueue;
         WifiEventDispatcher m_EventDispatcher;
-        
+
+        InternetActivityMonitor m_InternetActivityMonitor;
+        esp_timer_handle_t m_InternetActivityTimer;
+        static void InternetActivityTimerCb(void * pArgs);
+
         static constexpr std::string_view TASK_NAME = "WIFI_NAT_ROUTER_APP";
         static constexpr uint32_t TASK_STACK_SIZE = 8096;
         static constexpr int TASK_PRIORITY = 4;
         TaskHandle_t m_MainTask;
-        
+
+        AppSnapshot m_CachedAppSnapshot;
+
+        bool m_NewConfigInProgress;
+        WifiNatRouter::WifiNatRouterConfig m_PendingConfig;
+
         static void MainLoop(void *pArg);
 
         void ProcessEventQueue();

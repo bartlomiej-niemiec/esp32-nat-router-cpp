@@ -2,6 +2,7 @@
 
 #include "wifi_nat_router_if/wifi_nat_router_config.hpp"
 #include "wifi_nat_router_if/wifi_scanner_scanner_types.hpp"
+#include <array>
 
 namespace WifiNatRouterApp
 {
@@ -33,7 +34,7 @@ struct AppSnapshot{
 
     WifiNatRouter::WifiNatRouterConfig config;
     WifiNatRouter::WifiNatRouterState routerState;
-    WifiNatRouter::WifiNetwork scannedNetworks[WIFI_NETWORK_SCAN_LIMIT];
+    std::array<WifiNatRouter::WifiNetwork, WIFI_NETWORK_SCAN_LIMIT> scannedNetworks;
     uint8_t scannedCount;
     WifiNatRouter::ScannerState scanState;
     bool configApplyInProgress;
@@ -46,7 +47,7 @@ class WifiNatRouterAppIf{
 
     public:
         virtual ~WifiNatRouterAppIf() = default;
-        virtual bool SendCommand(const Command & cmd) const = 0;
+        virtual bool SendCommand(const Command & cmd) = 0;
         virtual bool TryGetSnapshot(AppSnapshot& out) const = 0;
 
 };

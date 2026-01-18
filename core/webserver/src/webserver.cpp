@@ -3,6 +3,9 @@
 #include "esp_log.h"
 
 void WebServer::WebServerMain(void *pArg) {
+
+    WebServer * pInstance = reinterpret_cast<WebServer*>(pArg);
+
     ESP_LOGI("MONGOOSE", "run_mongoose started");
     mongoose_init();
     mongoose_set_auth_handler(WebServerServices::AuthenticateUser);
@@ -16,6 +19,8 @@ void WebServer::WebServerMain(void *pArg) {
     mg_log_set(MG_LL_DEBUG);    // Set log level to debug
     for(;;) {                   // Infinite event loop
         mongoose_poll();        // Process network events
+        WebServerServices::Update();
+        WebServerServices::Refresh();
     }
 }
 
@@ -26,16 +31,20 @@ WebServer & WebServer::GetInstance()
 }
 
 
-void WebServer::Startup()
+void WebServer::Startup(WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterAppIf)
 {
+
+
     if (!m_WebServerThreadRunning)
     {
+        assert(pWifiNatRouterAppIf != nullptr);
+        m_pWifiNatRouterAppIf = pWifiNatRouterAppIf;
         m_WebServerThreadRunning = true;
         xTaskCreate(
             WebServerMain,
             m_pTaskName.data(),
             MONGOOSE_TASK_STACK_SIZE,
-            nullptr,
+            this,
             MONGOOSE_TASK_PRIO,
             &m_WebServerTaskHandle
         );
