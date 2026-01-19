@@ -85,7 +85,7 @@ WifiNatRouterHelpers::ConvertStringToIpAddress(settings->networkmask, netMask)) 
         cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdSetApConfig;
         cmd.apConfig = pendingApConfig;
         m_pWifiNatRouterAppIf->SendCommand(cmd);
-        delayAfterCmd();
+    
     }
 }
 
@@ -126,7 +126,7 @@ void WebServerServices::SetStaSetings(savestasettings * settings)
                 cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdSetStaConfig;
                 cmd.staConfig = newConfig;
                 m_pWifiNatRouterAppIf->SendCommand(cmd);
-                delayAfterCmd();
+            
             }
 
         }
@@ -144,7 +144,7 @@ void WebServerServices::SetStaSetings(savestasettings * settings)
             cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdSetStaConfig;
             cmd.staConfig = newConfig;
             m_pWifiNatRouterAppIf->SendCommand(cmd);
-            delayAfterCmd();
+        
         }
     }
 
@@ -187,12 +187,12 @@ void WebServerServices::StartStaScannningNetworks(struct mg_str body)
     WifiNatRouterApp::Command cmd;
     cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdStartScan;
     m_pWifiNatRouterAppIf->SendCommand(cmd);
-    delayAfterCmd();
+
 }
 
 bool WebServerServices::IsStaScannningInProgress(void)
 {
-    return m_AppSnapshot.scanState != WifiNatRouter::ScannerState::Done;
+    return m_AppSnapshot.scanState == WifiNatRouter::ScannerState::Scanning;
 }
 
 void WebServerServices::GetWifiNatRouterInfo(info * info)
@@ -235,7 +235,7 @@ void WebServerServices::StartWifiNatRouterWithNewConfig(struct mg_str body)
         WifiNatRouterApp::Command cmd;
         cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdApplyNetConfig;
         m_pWifiNatRouterAppIf->SendCommand(cmd);
-        delayAfterCmd();
+    
     }
 
 }

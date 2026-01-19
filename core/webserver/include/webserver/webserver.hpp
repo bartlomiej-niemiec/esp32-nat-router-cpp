@@ -25,6 +25,7 @@ class WebServer
 
         WebServer():
             m_WebServerThreadRunning(false),
+            m_pWifiNatRouterAppIf(nullptr),
             m_WebServerTaskHandle(nullptr)
         {};
 
