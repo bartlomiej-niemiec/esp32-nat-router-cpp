@@ -1,22 +1,6 @@
-#include "wifi_nat_router_app.hpp"
-#include "wifi_nat_router_if/wifi_nat_router_factory.hpp"
-
-#include "webserver/webserver.hpp"
-
-#include "data_storer_if/data_storer.hpp"
-
-#include "freertos/Freertos.h"
+#include "product_main.hpp"
 
 extern "C" void app_main(void)
 {
-    DataStorage::DataStorer::Init();
-
-    WifiNatRouterApp::WifiNatRouterApp app(WifiNatRouter::WifiNatRouterFactory::GetInstance().GetWifiNatRouter());
-    WebServer & webServer = WebServer::GetInstance();
-    webServer.Startup(&app.GetAppIf());
-
-    for (;;)
-    {
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }
+    product_main();
 }

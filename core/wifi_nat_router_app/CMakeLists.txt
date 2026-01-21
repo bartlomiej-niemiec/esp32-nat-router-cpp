@@ -10,11 +10,8 @@ idf_component_register(
                               "./src/internet_activity_monitor.cpp"
                         INCLUDE_DIRS "./include"
                         REQUIRES    wifi_nat_router_if
-                                    wifi_nat_router_espidf_impl
                                     rgbled_if
-                                    rgbled_sk68xxminihs
                                     data_storer_if
-                                    data_storer_nvs_impl
                                     esp_timer
                                     utils     
 )
