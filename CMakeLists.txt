@@ -16,6 +16,7 @@ set(EXTRA_COMPONENT_DIRS
   ${CMAKE_SOURCE_DIR}/core/webserver
   ${CMAKE_SOURCE_DIR}/core/user_credential_manager
   ${CMAKE_SOURCE_DIR}/core/status_led
+  ${CMAKE_SOURCE_DIR}/core/factory_reset_pb
 
   # third-party
   ${CMAKE_SOURCE_DIR}/third-party/mongoose

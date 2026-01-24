@@ -41,6 +41,8 @@ class StatusLed
 
         StatusLed(const uint32_t gpio_pin_num);
 
+        ~StatusLed();
+
         bool Update (const Status & status);
 
     private:

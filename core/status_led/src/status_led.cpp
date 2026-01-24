@@ -34,6 +34,10 @@ StatusLed::StatusLed(const uint32_t gpio_pin_num):
     assert(nullptr != m_MainTask);
 }
  
+StatusLed::~StatusLed()
+{
+    vQueueDelete(m_MessageQueue);
+}
 
 bool StatusLed::Update (const Status & status)
 {
