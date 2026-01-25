@@ -9,14 +9,14 @@ FactoryResetPb::FactoryResetPb(const uint32_t gpio_pin_num, StatusLed::StatusLed
     m_FactoryResetPbGpioPin(static_cast<gpio_num_t>(gpio_pin_num)),
     m_pStatusLedIf(pStatusLedIf),
     m_pWifiNatRouterIf(pWifiNatRouterIf),
-    m_FactoryResetStatus(),
-    m_FactoryResetProcessState(FactoryResetProcessState::WAIT)
+    m_FactoryResetStatus()
 {
     assert(nullptr != m_pStatusLedIf);
     assert(nullptr != m_pWifiNatRouterIf);
 
     m_FactoryResetStatus.m_FactoryButtonPressed = 0;
     m_FactoryResetStatus.m_TimeOnPress = 0;
+    m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
 
     assert(true == GPIO_IS_VALID_GPIO(m_FactoryResetPbGpioPin));
     gpio_config_t factoryResetConfig = {
@@ -42,6 +42,13 @@ void FactoryResetPb::ISR_HANDLER(void *arg)
     {
         pStatus->m_TimeOnPress = esp_timer_get_time();
     }
+    else
+    {
+        if (pStatus->m_FactoryResetProcessState == FactoryResetProcessState::DONE)
+        {
+            pStatus->m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
+        }
+    }
 }
 
 void FactoryResetPb::MainLoop()
@@ -50,7 +57,7 @@ void FactoryResetPb::MainLoop()
 
         uint64_t elapsedTimeInS = (m_FactoryResetStatus.m_TimeOnPress - esp_timer_get_time()) / 1e6;
 
-        switch (m_FactoryResetProcessState)
+        switch (m_FactoryResetStatus.m_FactoryResetProcessState)
         {
             case FactoryResetProcessState::WAIT:
             {
@@ -60,7 +67,7 @@ void FactoryResetPb::MainLoop()
                     status.type = StatusLed::StatusType::FACTORY_RESET;
                     status.factoryResetState = StatusLed::FactoryResetState::START;
                     m_pStatusLedIf->Update(status);
-                    m_FactoryResetProcessState = FactoryResetProcessState::PRESSED_FOR_1SEC;
+                    m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::PRESSED_FOR_1SEC;
                 }
             }   
             break;
@@ -78,27 +85,27 @@ void FactoryResetPb::MainLoop()
                     cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdFactoryReset;
                     m_pWifiNatRouterIf->SendCommand(cmd);
 
-                    m_FactoryResetProcessState = FactoryResetProcessState::DONE;
+                    m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::DONE;
                 }
             }
             break;
 
             case FactoryResetProcessState::DONE:
             {
-
+                // Don't do anythong just wait for button release
             }
             break;
         }
     }
     else
     {
-        if (m_FactoryResetProcessState == FactoryResetProcessState::PRESSED_FOR_1SEC)
+        if (m_FactoryResetStatus.m_FactoryResetProcessState == FactoryResetProcessState::PRESSED_FOR_1SEC)
         {
             StatusLed::Status status;
             status.type = StatusLed::StatusType::FACTORY_RESET;
             status.factoryResetState = StatusLed::FactoryResetState::CANCEL;
             m_pStatusLedIf->Update(status);
-            m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
+            m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
         }
     }
 }

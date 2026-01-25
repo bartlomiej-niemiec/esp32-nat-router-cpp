@@ -26,20 +26,19 @@ class FactoryResetPb
         StatusLed::StatusLedIf * const m_pStatusLedIf;
         WifiNatRouterApp::WifiNatRouterAppIf * const m_pWifiNatRouterIf;
 
-        struct FactoryResetStatus{
-            std::atomic<uint32_t> m_FactoryButtonPressed;
-            int64_t m_TimeOnPress;
-        };
-
-        FactoryResetStatus m_FactoryResetStatus;
-
         enum class FactoryResetProcessState{
             WAIT,
             PRESSED_FOR_1SEC,
             DONE
         };
 
-        FactoryResetProcessState m_FactoryResetProcessState;
+        struct FactoryResetStatus{
+            std::atomic<uint32_t> m_FactoryButtonPressed;
+            std::atomic<FactoryResetProcessState> m_FactoryResetProcessState;
+            int64_t m_TimeOnPress;
+        };
+
+        FactoryResetStatus m_FactoryResetStatus;
 
         static void ISR_HANDLER(void *arg);
 };
