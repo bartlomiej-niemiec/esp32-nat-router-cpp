@@ -7,3 +7,7 @@
 static constexpr bool ENABLE_RGB_LED = true;
 static constexpr uint32_t GPIO_BUILT_RGB_LED_ESP32S3 = 38;
 static constexpr uint32_t RGB_LED_GPIO_PIN = GPIO_BUILT_RGB_LED_ESP32S3;
+
+/// Factory Reset Pb
+static constexpr bool ENABLE_FACTORY_RESET_PB = false;
+static constexpr uint32_t FACTORY_RESET_GPIO_PIN = 20;

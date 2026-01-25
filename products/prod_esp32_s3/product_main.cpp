@@ -1,5 +1,6 @@
 #include "data_storer_if/data_storer.hpp"
 
+#include "factory_reset_pb/factory_reset_pb.hpp"
 #include "status_led/status_led.hpp"
 
 #include "product_config.hpp"
@@ -11,6 +12,7 @@
 
 static StatusLed::StatusLed * pStatusLed = nullptr;
 static WifiNatRouterApp::WifiNatRouterApp * pApp = nullptr;
+static FactoryReset::FactoryResetPb * pFactoryResetButton = nullptr;
 
 void product_init(void)
 {
@@ -24,6 +26,13 @@ void product_init(void)
 
     pApp = new (std::nothrow) WifiNatRouterApp::WifiNatRouterApp(WifiNatRouter::WifiNatRouterFactory::GetInstance().GetWifiNatRouter(), pStatusLed);
     assert(pApp);
+
+    if (ENABLE_FACTORY_RESET_PB)
+    {
+        pFactoryResetButton = new (std::nothrow) FactoryReset::FactoryResetPb(FACTORY_RESET_GPIO_PIN, pStatusLed, &(pApp->GetAppIf()));
+        assert(pStatusLed);
+    }
+
     WebServer & webServer = WebServer::GetInstance();
     webServer.Startup(&(pApp->GetAppIf()));
 }

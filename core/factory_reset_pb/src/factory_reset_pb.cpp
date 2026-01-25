@@ -11,7 +11,6 @@ FactoryResetPb::FactoryResetPb(const uint32_t gpio_pin_num, StatusLed::StatusLed
     m_pWifiNatRouterIf(pWifiNatRouterIf),
     m_FactoryResetStatus()
 {
-    assert(nullptr != m_pStatusLedIf);
     assert(nullptr != m_pWifiNatRouterIf);
 
     m_FactoryResetStatus.m_FactoryButtonPressed = 0;
@@ -63,10 +62,14 @@ void FactoryResetPb::MainLoop()
             {
                 if (elapsedTimeInS > 0)
                 {
-                    StatusLed::Status status;
-                    status.type = StatusLed::StatusType::FACTORY_RESET;
-                    status.factoryResetState = StatusLed::FactoryResetState::START;
-                    m_pStatusLedIf->Update(status);
+                    if(m_pStatusLedIf)
+                    {
+                        StatusLed::Status status;
+                        status.type = StatusLed::StatusType::FACTORY_RESET;
+                        status.factoryResetState = StatusLed::FactoryResetState::START;
+                        m_pStatusLedIf->Update(status);
+                    }
+
                     m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::PRESSED_FOR_1SEC;
                 }
             }   
@@ -76,10 +79,13 @@ void FactoryResetPb::MainLoop()
             {
                 if (elapsedTimeInS > 8)
                 {
-                    StatusLed::Status status;
-                    status.type = StatusLed::StatusType::FACTORY_RESET;
-                    status.factoryResetState = StatusLed::FactoryResetState::DONE;
-                    m_pStatusLedIf->Update(status);
+                    if(m_pStatusLedIf)
+                    {
+                        StatusLed::Status status;
+                        status.type = StatusLed::StatusType::FACTORY_RESET;
+                        status.factoryResetState = StatusLed::FactoryResetState::DONE;
+                        m_pStatusLedIf->Update(status);
+                    }
 
                     WifiNatRouterApp::Command cmd;
                     cmd.cmd = WifiNatRouterApp::WifiNatRouterCmd::CmdFactoryReset;
@@ -101,10 +107,13 @@ void FactoryResetPb::MainLoop()
     {
         if (m_FactoryResetStatus.m_FactoryResetProcessState == FactoryResetProcessState::PRESSED_FOR_1SEC)
         {
-            StatusLed::Status status;
-            status.type = StatusLed::StatusType::FACTORY_RESET;
-            status.factoryResetState = StatusLed::FactoryResetState::CANCEL;
-            m_pStatusLedIf->Update(status);
+            if(m_pStatusLedIf)
+            {
+                StatusLed::Status status;
+                status.type = StatusLed::StatusType::FACTORY_RESET;
+                status.factoryResetState = StatusLed::FactoryResetState::CANCEL;
+                m_pStatusLedIf->Update(status);
+            }
             m_FactoryResetStatus.m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
         }
     }

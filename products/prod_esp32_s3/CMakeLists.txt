@@ -8,4 +8,5 @@ idf_component_register(SRCS "product_main.cpp"
                                 data_storer_nvs_impl
                                 webserver
                                 status_led
+                                factory_reset_pb
 )
