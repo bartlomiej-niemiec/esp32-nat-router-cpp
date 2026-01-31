@@ -167,27 +167,22 @@ void StatusLed::UpdateLedInternetAccess(bool internetAvailable)
 
 void StatusLed::UpdateLedFactoryReset(FactoryResetState factoryResetState)
 {
-    switch (factoryResetState)
-    {
-    
-        case FactoryResetState::START:
-        {
-            constexpr RgbLed::RgbColor factoryResetStart = RgbLed::RgbColorCreator::Create(RgbLed::Color::Purple);
-            m_pStatusLed->Blink(factoryResetStart, BLINK_1HZ);
-        }
-        break;
+    const auto & opt = m_FactoryResetLedMatrix[ToIndex(factoryResetState)];
+    if (!opt.has_value()) {
+        return;
+    }
 
-        case FactoryResetState::DONE_WAIT_FOR_RELEASE:
-        {
-            constexpr RgbLed::RgbColor factoryResetDoneWaitForRelease = RgbLed::RgbColorCreator::Create(RgbLed::Color::Purple);
-            m_pStatusLed->Solid(factoryResetDoneWaitForRelease);
-        }
-        break;
-
-        default:
-            break;
-
-    };
+    std::visit(
+            Visitor2{
+                [&](const SolidConfig& cfg) {
+                    m_pStatusLed->Solid(cfg.color);
+                },
+                [&](const BlinkConfig& cfg) {
+                    m_pStatusLed->Blink(cfg.color, cfg.blink_freq);
+                }
+            },
+            opt.value()
+    );
 }
 
 

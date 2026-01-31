@@ -13,6 +13,7 @@
 #include <array>
 #include <memory>
 #include <variant>
+#include <optional>
 
 namespace StatusLed
 {
@@ -86,12 +87,25 @@ WifiNatRouterState state)
             return static_cast<size_t>(state);
         }
 
+        const std::array<std::optional<configVars>, static_cast<size_t>(FactoryResetState::MAX_STATE)> m_FactoryResetLedMatrix = {{
+            { BlinkConfig(RgbLed::RgbColorCreator::Create(RgbLed::Color::Purple), BLINK_1HZ)    },  // START
+            { std::nullopt                                                                      },  // CANCEL
+            { SolidConfig(RgbLed::RgbColorCreator::Create(RgbLed::Color::Purple))               },  // DONE_WAIT_FOR_RELEASE
+            { std::nullopt                                                                      },  // DONE
+        }};
+
+        constexpr size_t ToIndex(FactoryResetState state)
+        {
+            return static_cast<size_t>(state);
+        }
+
         template<typename A, typename B>
         struct Visitor2 : A, B {
             Visitor2(A a, B b) : A(a), B(b) {}
             using A::operator();
             using B::operator();
         };
+
         
         void UpdateLedRouterState(WifiNatRouter::WifiNatRouterState state);
 

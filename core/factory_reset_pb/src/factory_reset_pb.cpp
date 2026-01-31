@@ -5,8 +5,8 @@
 namespace FactoryReset
 {
 
-FactoryResetPb::FactoryResetPb(const uint32_t gpio_pin_num, StatusLed::StatusLedIf * pStatusLedIf, WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterIf):
-    m_FactoryResetPbGpioPin(static_cast<gpio_num_t>(gpio_pin_num)),
+FactoryResetPb::FactoryResetPb(const Config & FactoryButtonConfig, StatusLed::StatusLedIf * pStatusLedIf, WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterIf):
+    m_FactoryButtonConfig(FactoryButtonConfig),
     m_pStatusLedIf(pStatusLedIf),
     m_pWifiNatRouterIf(pWifiNatRouterIf),
     m_prevLevel(true)
@@ -16,10 +16,10 @@ FactoryResetPb::FactoryResetPb(const uint32_t gpio_pin_num, StatusLed::StatusLed
     m_TimeOnPress = 0;
     m_FactoryResetProcessState = FactoryResetProcessState::WAIT;
 
-    assert(true == GPIO_IS_VALID_GPIO(m_FactoryResetPbGpioPin));
+    assert(true == GPIO_IS_VALID_GPIO(m_FactoryButtonConfig.gpio_pin_num));
     
     gpio_config_t factoryResetConfig = {
-        .pin_bit_mask = static_cast<uint64_t>(1 << gpio_pin_num),
+        .pin_bit_mask = static_cast<uint64_t>(1 << m_FactoryButtonConfig.gpio_pin_num),
         .mode = GPIO_MODE_INPUT,
         .pull_up_en = GPIO_PULLUP_ENABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
@@ -31,7 +31,7 @@ FactoryResetPb::FactoryResetPb(const uint32_t gpio_pin_num, StatusLed::StatusLed
 
 void FactoryResetPb::MainLoop()
 {
-    bool level = static_cast<bool>(gpio_get_level(m_FactoryResetPbGpioPin));
+    bool level = static_cast<bool>(gpio_get_level(m_FactoryButtonConfig.gpio_pin_num));
     double elapsedTimeInS = 0;
 
 
@@ -49,7 +49,7 @@ void FactoryResetPb::MainLoop()
     {
         case FactoryResetProcessState::WAIT:
         {
-            if (elapsedTimeInS > 1)
+            if (elapsedTimeInS > m_FactoryButtonConfig.start_time_in_s)
             {
                 if(m_pStatusLedIf)
                 {
@@ -65,7 +65,7 @@ void FactoryResetPb::MainLoop()
 
         case FactoryResetProcessState::PRESSED_FOR_1SEC:
         {
-            if (elapsedTimeInS > 8)
+            if (elapsedTimeInS > m_FactoryButtonConfig.finish_time_in_s)
             {
                 if(m_pStatusLedIf)
                 {

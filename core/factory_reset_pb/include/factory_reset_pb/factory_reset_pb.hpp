@@ -12,8 +12,14 @@ namespace FactoryReset
 class FactoryResetPb
 {
     public:
+        
+        struct Config{
+            gpio_num_t gpio_pin_num;
+            uint8_t start_time_in_s;
+            uint8_t finish_time_in_s;
+        };
 
-        FactoryResetPb(const uint32_t gpio_pin_num,
+        FactoryResetPb(const Config & FactoryButtonConfig,
             StatusLed::StatusLedIf * pStatusLedIf,
             WifiNatRouterApp::WifiNatRouterAppIf * pWifiNatRouterIf
         );
@@ -22,7 +28,7 @@ class FactoryResetPb
 
     private:
 
-        const gpio_num_t m_FactoryResetPbGpioPin;
+        const Config m_FactoryButtonConfig;
         StatusLed::StatusLedIf * const m_pStatusLedIf;
         WifiNatRouterApp::WifiNatRouterAppIf * const m_pWifiNatRouterIf;
 

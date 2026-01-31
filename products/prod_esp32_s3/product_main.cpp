@@ -29,7 +29,8 @@ void product_init(void)
 
     if (ENABLE_FACTORY_RESET_PB)
     {
-        pFactoryResetButton = new (std::nothrow) FactoryReset::FactoryResetPb(FACTORY_RESET_GPIO_PIN, pStatusLed, &(pApp->GetAppIf()));
+        constexpr FactoryReset::FactoryResetPb::Config FrConfig{static_cast<gpio_num_t>(FACTORY_RESET_GPIO_PIN), FACTORY_RESET_PB_PRESS_TIME_TO_BLINK_LED, FACTORY_RESET_PB_PRESS_TIME_TO_REQUEST};
+        pFactoryResetButton = new (std::nothrow) FactoryReset::FactoryResetPb(FrConfig, pStatusLed, &(pApp->GetAppIf()));
         assert(pFactoryResetButton);
     }
 
