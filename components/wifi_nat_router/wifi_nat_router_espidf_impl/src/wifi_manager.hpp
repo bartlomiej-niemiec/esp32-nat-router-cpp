@@ -9,6 +9,8 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 
+#include "lwipopts.h"
+
 #include <utility>
 #include <array>
 
@@ -132,7 +134,9 @@ class WifiManager:
 
         ScannerState GetCurrentState() override;
 
-        const std::vector<WifiNetwork> & GetResults() const override;    
+        const std::vector<WifiNetwork> & GetResults() const override;
+
+        const NatRouterStatistics & GetNetworkStatistics();
         
         void RegisterStateListener(ScannerStateListener cb) override;
 
@@ -200,6 +204,8 @@ class WifiManager:
         bool m_ScanningActive;
 
         bool m_ShutdownInProgress;
+
+        NatRouterStatistics m_NatRouterStatistics;
 
         static constexpr uint8_t RECONNECT_COUNTER_ATTEMPTS_COUNT = 3;
         uint8_t m_ReconnectCounterVal;
@@ -279,6 +285,8 @@ class WifiManager:
         static void RetryConnectToNetwork(void *arg);
 
         esp_timer_handle_t m_StaConnectionTimer;
+
+        void SaveNetworkStats(const stats_proto & rfrom, ProtoStats & to);
 
 };
 

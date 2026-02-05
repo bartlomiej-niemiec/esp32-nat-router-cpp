@@ -2,6 +2,7 @@
 
 #include "wifi_nat_router_if/wifi_nat_router_config.hpp"
 #include "esp_netif_types.h"
+#include "lwip/stats.h"
 
 namespace WifiNatRouter
 {
@@ -45,6 +46,7 @@ class WifiAp{
         State m_State;
 
         static constexpr int DHCPS_OFFER_DNS = 0x02;
+
 };
 
 

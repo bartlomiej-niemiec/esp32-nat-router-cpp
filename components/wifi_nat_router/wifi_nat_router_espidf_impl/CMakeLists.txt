@@ -10,6 +10,7 @@ idf_component_register(
         "./src/wifi_scanner.cpp"
     PRIV_REQUIRES esp_wifi "wifi_nat_router_if"
                             "utils"
+                            lwip
                             esp_netif
                             esp_timer
                             nvs_flash

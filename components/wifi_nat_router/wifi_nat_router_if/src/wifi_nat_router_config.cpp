@@ -125,5 +125,22 @@ bool WifiNatRouterConfig::operator!=(const WifiNatRouterConfig& other) const {
     return !(*this == other);
 }
 
+void NatRouterStatistics::printStatistics(const ProtoStats& stats, const char * name)
+{
+    ESP_LOGI("NatRouterStatistics", "%s: xmit %llu", name, stats.xmit);
+    ESP_LOGI("NatRouterStatistics", "%s: recv %llu", name, stats.recv);
+    ESP_LOGI("NatRouterStatistics", "%s: fw %llu", name, stats.fw);
+    ESP_LOGI("NatRouterStatistics", "%s: drop %llu", name, stats.drop);
+    ESP_LOGI("NatRouterStatistics", "%s: chkerr %llu", name, stats.chkerr);
+    ESP_LOGI("NatRouterStatistics", "%s: lenerr %llu", name, stats.lenerr);
+}
+
+void NatRouterStatistics::printNaptStatistics(const NaptStats& stats)
+{
+    ESP_LOGI("NatRouterStatistics", "NAPT: active tcp %llu", stats.nr_active_tcp);
+    ESP_LOGI("NatRouterStatistics", "NAPT: active udp %llu", stats.nr_active_udp);
+    ESP_LOGI("NatRouterStatistics", "NAPT: active icmp %llu", stats.nr_active_icmp);
+    ESP_LOGI("NatRouterStatistics", "NAPT: active forced evictions %llu", stats.nr_forced_evictions);
+}
 
 };

@@ -39,6 +39,8 @@ public:
         return &m_WifiManager;
     }
 
+    const NatRouterStatistics & GetNetworkStatistics();
+
 private:
 
     WifiNatRouterConfig m_CurrentConfig;

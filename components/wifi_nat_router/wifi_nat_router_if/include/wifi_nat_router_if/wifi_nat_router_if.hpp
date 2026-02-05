@@ -40,6 +40,8 @@ public:
 
     virtual int GetNoClients() const = 0;
 
+    virtual const NatRouterStatistics & GetNetworkStatistics() = 0;
+
 };
 
 }

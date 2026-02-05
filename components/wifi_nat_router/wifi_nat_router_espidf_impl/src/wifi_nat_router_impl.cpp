@@ -104,4 +104,9 @@ int WifiNatRouterImpl::GetNoClients() const {
     return m_WifiManager.GetNoClients();
 }
 
+const NatRouterStatistics & WifiNatRouterImpl::GetNetworkStatistics()
+{
+    return m_WifiManager.GetNetworkStatistics();
+}
+
 }

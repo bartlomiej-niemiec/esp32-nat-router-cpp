@@ -86,6 +86,32 @@ struct WifiNatRouterConfig {
     static void printConfig(WifiNatRouterConfig& config);
 };
 
+struct NaptStats {
+  uint64_t nr_active_tcp;
+  uint64_t nr_active_udp;
+  uint64_t nr_active_icmp;
+  uint64_t nr_forced_evictions;
+};
+
+struct ProtoStats {
+  uint64_t xmit;             /* Transmitted packets. */
+  uint64_t recv;             /* Received packets. */
+  uint64_t fw;               /* Forwarded packets. */
+  uint64_t drop;             /* Dropped packets. */
+  uint64_t chkerr;           /* Checksum error. */
+  uint64_t lenerr;           /* Invalid length error. */
+};
+
+struct NatRouterStatistics {
+    ProtoStats ip;
+    ProtoStats tcp;
+    ProtoStats udp;
+    ProtoStats icmp;
+    NaptStats napt_stats;
+    static void printStatistics(const ProtoStats& stats, const char * name);
+    static void printNaptStatistics(const NaptStats& stats);
+};
+
 
 class WifiNatRouterHelpers
 {

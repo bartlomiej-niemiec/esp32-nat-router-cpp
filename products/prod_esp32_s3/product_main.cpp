@@ -40,6 +40,7 @@ void product_init(void)
 
 void product_main(void)
 {
+    auto & routerIf = WifiNatRouter::WifiNatRouterFactory::GetInstance().GetWifiNatRouter();
     for (;;)
     {
         if (pFactoryResetButton)
@@ -51,7 +52,5 @@ void product_main(void)
         {
             pStatusLed->MainLoop();
         }
-
-        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
