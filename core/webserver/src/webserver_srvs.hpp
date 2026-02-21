@@ -47,6 +47,16 @@ class WebServerServices
 
         static bool IsSaveEventFinished();
 
+        static void GetIpProtoStas(struct proto_stats_ip *data);
+
+        static void GetTcpProtoStas(struct proto_stats_udp *data);
+
+        static void GetUdpProtoStas(struct proto_stats_tcp *data);
+
+        static void GetIcmpProtoStas(struct proto_stats_icmp *data);
+
+        static void GetNaptProtoStas(struct napt_stats *data);
+
         static void Update();
 
         static void Refresh();

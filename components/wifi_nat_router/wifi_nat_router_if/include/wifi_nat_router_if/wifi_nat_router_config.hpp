@@ -91,6 +91,7 @@ struct NaptStats {
   uint64_t nr_active_udp;
   uint64_t nr_active_icmp;
   uint64_t nr_forced_evictions;
+  bool operator==(const NaptStats& other) const = default;
 };
 
 struct ProtoStats {
@@ -100,6 +101,7 @@ struct ProtoStats {
   uint64_t drop;             /* Dropped packets. */
   uint64_t chkerr;           /* Checksum error. */
   uint64_t lenerr;           /* Invalid length error. */
+  bool operator==(const ProtoStats& other) const = default;
 };
 
 struct NatRouterStatistics {
@@ -108,6 +110,9 @@ struct NatRouterStatistics {
     ProtoStats udp;
     ProtoStats icmp;
     NaptStats napt_stats;
+
+    bool operator==(const NatRouterStatistics& other) const = default;
+
     static void printStatistics(const ProtoStats& stats, const char * name);
     static void printNaptStatistics(const NaptStats& stats);
 };

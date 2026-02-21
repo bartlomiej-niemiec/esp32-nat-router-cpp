@@ -88,6 +88,11 @@ bool WifiNatRouterAppImpl::TryGetSnapshot(AppSnapshot& out) const
     return true;
 }
 
+const WifiNatRouter::NatRouterStatistics & WifiNatRouterAppImpl::GetRouterStatistics()
+{
+    return m_rWifiNatRouter.GetNetworkStatistics();
+}
+
 void WifiNatRouterAppImpl::InternetActivityTimerCb(void * pArgs)
 {
     InternetActivityMonitor * pIaMonitor = reinterpret_cast<InternetActivityMonitor*>(pArgs);
@@ -111,7 +116,6 @@ void WifiNatRouterAppImpl::MainLoop(void *pArg)
     pInstance->m_WorkingAppSnapshot.configApplyInProgress = false;
     pInstance->m_WorkingAppSnapshot.internetAccess = false;
     pInstance->m_WorkingAppSnapshot.noApClients = 0;
-
     pInstance->m_ApiSnapShot = pInstance->m_WorkingAppSnapshot;
 
     for (;;)

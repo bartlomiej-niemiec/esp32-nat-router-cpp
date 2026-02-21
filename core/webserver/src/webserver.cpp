@@ -16,6 +16,13 @@ void WebServer::WebServerMain(void *pArg) {
     mongoose_set_http_handlers("savestasettings", WebServerServices::GetStaSettings, WebServerServices::SetStaSetings);
     mongoose_set_http_handlers("applynetworkconfig", WebServerServices::IsApplyDisabled, WebServerServices::StartWifiNatRouterWithNewConfig);
     mongoose_set_http_handlers("login", WebServerServices::GetLogin, WebServerServices::SetLogin);
+
+    mongoose_set_http_handlers("proto_stats_ip", WebServerServices::GetIpProtoStas, NULL);
+    mongoose_set_http_handlers("proto_stats_tcp", WebServerServices::GetTcpProtoStas, NULL);
+    mongoose_set_http_handlers("proto_stats_udp", WebServerServices::GetUdpProtoStas, NULL);
+    mongoose_set_http_handlers("proto_stats_icmp", WebServerServices::GetIcmpProtoStas, NULL);
+    mongoose_set_http_handlers("napt_stats", WebServerServices::GetNaptProtoStas, NULL);
+
     mg_log_set(MG_LL_DEBUG);    
     for(;;) {                   
         mongoose_poll();        

@@ -45,6 +45,8 @@ class WifiNatRouterAppImpl:
 
         bool TryGetSnapshot(AppSnapshot& out) const;
 
+        const WifiNatRouter::NatRouterStatistics & GetRouterStatistics();
+
     private:
         
         class WifiEventDispatcher:
