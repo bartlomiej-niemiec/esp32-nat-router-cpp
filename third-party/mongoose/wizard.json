@@ -324,8 +324,8 @@
                           {"type": "dropdown", "ref": "savestasettings.SSIDNoId", "options": "0, 1, 2, 3, 4, 5", "css": "color: #050505;\nbackground: #f0efef;"}
                         ], "css": "flex: 0 0 auto;\nheight: 79px;\nwidth: 516px;"},
                       {"classes": "card", "layout": [
-                          {"format": "New Name"},
-                          {"type": "input", "ref": "savestasettings.Name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;", "disabled": "${savestasettings.SSIDNoId} > 0"}
+                          {"format": "New Name", "css": "flex: 0 0 auto;\nwidth: 666.078125px;"},
+                          {"type": "input", "ref": "savestasettings.Name", "__label": "input", "css": "flex: 0 0 auto;\nfont-size: 1rem;\ncolor: #0a0a0a;\nheight: 2rem;\nwidth: 17.75rem;"}
                         ], "css": "flex: 0 0 auto;\nheight: 5rem;\nwidth: 513px;"},
                       {"classes": "card", "layout": [
                           {"format": "Password"},
@@ -496,7 +496,7 @@
                             ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 368px;"}
                         ], "css": "flex: 0 0 auto;\nheight: 305px;\nwidth: 398px;"},
                       {"classes": "card", "layout": [
-                          {"format": "ICMP", "css": "flex: 0 0 auto;\nwidth: 269px;\nfont-size: 1rem;\nheight: 25px;"},
+                          {"format": "NAPT", "css": "flex: 0 0 auto;\nwidth: 269px;\nfont-size: 1rem;\nheight: 25px;"},
                           {"classes": "card", "layout": [
                               {"format": "Active TCP Connections: ${napt_stats.active_tcp_conn}", "css": "flex: 0 0 auto;\nheight: 21px;\nfont-size: 1rem;\nfont-weight: 100;\nwidth: 339px;"}
                             ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 365px;"},
@@ -508,10 +508,7 @@
                             ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 367px;"},
                           {"classes": "card", "layout": [
                               {"format": "Forced Evictions Count: ${napt_stats.forced_evictions_no}", "css": "flex: 0 0 auto;\nheight: 21px;\nfont-size: 1rem;\nfont-weight: 100;\nwidth: 294px;"}
-                            ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 367px;"},
-                          {"classes": "card", "layout": [
-                              {"format": "Invalid length error: ${proto_stats_icmp.lenerr}", "css": "flex: 0 0 auto;\nheight: 21px;\nfont-size: 1rem;\nfont-weight: 100;\nwidth: 294px;"}
-                            ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 368px;"}
+                            ], "css": "flex: 0 0 auto;\nheight: 43px;\nwidth: 367px;"}
                         ]}
                     ], "__label": "stats"}
                 ], "__label": "stats"}

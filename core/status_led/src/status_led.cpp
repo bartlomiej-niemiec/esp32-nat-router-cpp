@@ -30,7 +30,7 @@ StatusLed::~StatusLed()
 
 bool StatusLed::Update (const Status & status)
 {
-    return xQueueSend(m_MessageQueue, &status, pdMS_TO_TICKS(5)) == pdTRUE;
+    return xQueueSend(m_MessageQueue, &status, 0) == pdTRUE;
 }
 
 void StatusLed::MainLoop()

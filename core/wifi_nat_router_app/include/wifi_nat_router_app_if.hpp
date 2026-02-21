@@ -62,7 +62,7 @@ class WifiNatRouterAppIf{
         virtual ~WifiNatRouterAppIf() = default;
         virtual bool SendCommand(const Command & cmd) = 0;
         virtual bool TryGetSnapshot(AppSnapshot& out) const = 0;
-
+        virtual const WifiNatRouter::NatRouterStatistics & GetRouterStatistics() = 0;
 };
 
 }

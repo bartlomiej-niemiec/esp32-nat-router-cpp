@@ -275,6 +275,59 @@ void WebServerServices::Update()
     }
 }
 
+void WebServerServices::GetIpProtoStas(struct proto_stats_ip *data)
+{
+    const WifiNatRouter::NatRouterStatistics & networkStats = m_pWifiNatRouterAppIf->GetRouterStatistics();
+    data->tx = networkStats.ip.xmit;
+    data->rx = networkStats.ip.recv;
+    data->fw = networkStats.ip.fw;
+    data->lenerr = networkStats.ip.lenerr;
+    data->drop = networkStats.ip.drop;
+    data->chkerr = networkStats.ip.chkerr;
+}
+
+void WebServerServices::GetTcpProtoStas(struct proto_stats_udp *data)
+{
+    const WifiNatRouter::NatRouterStatistics & networkStats = m_pWifiNatRouterAppIf->GetRouterStatistics();
+    data->tx = networkStats.udp.xmit;
+    data->rx = networkStats.udp.recv;
+    data->fw = networkStats.udp.fw;
+    data->lenerr = networkStats.udp.lenerr;
+    data->drop = networkStats.udp.drop;
+    data->chkerr = networkStats.udp.chkerr;
+}
+
+void WebServerServices::GetUdpProtoStas(struct proto_stats_tcp *data)
+{
+    const WifiNatRouter::NatRouterStatistics & networkStats = m_pWifiNatRouterAppIf->GetRouterStatistics();
+    data->tx = networkStats.tcp.xmit;
+    data->rx = networkStats.tcp.recv;
+    data->fw = networkStats.tcp.fw;
+    data->lenerr = networkStats.tcp.lenerr;
+    data->drop = networkStats.tcp.drop;
+    data->chkerr = networkStats.tcp.chkerr;
+}
+
+void WebServerServices::GetIcmpProtoStas(struct proto_stats_icmp *data)
+{
+    const WifiNatRouter::NatRouterStatistics & networkStats = m_pWifiNatRouterAppIf->GetRouterStatistics();
+    data->tx = networkStats.icmp.xmit;
+    data->rx = networkStats.icmp.recv;
+    data->fw = networkStats.icmp.fw;
+    data->lenerr = networkStats.icmp.lenerr;
+    data->drop = networkStats.icmp.drop;
+    data->chkerr = networkStats.icmp.chkerr;
+}
+
+void WebServerServices::GetNaptProtoStas(struct napt_stats *data)
+{
+    const WifiNatRouter::NatRouterStatistics & networkStats = m_pWifiNatRouterAppIf->GetRouterStatistics();
+    data->active_tcp_conn = networkStats.napt_stats.nr_active_tcp;
+    data->active_udp_conn = networkStats.napt_stats.nr_active_udp;
+    data->active_icmp_conn = networkStats.napt_stats.nr_active_icmp;
+    data->forced_evictions_no = networkStats.napt_stats.nr_forced_evictions;
+}
+
 void WebServerServices::Refresh()
 {
     if (m_RefreshRequired)
