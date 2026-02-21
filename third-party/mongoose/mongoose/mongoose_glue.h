@@ -19,6 +19,8 @@ extern "C" {
 #define WIZARD_ENABLE_WEBSOCKET 0
 
 #define WIZARD_ENABLE_MQTT 0
+#define WIZARD_ENABLE_OTA_OVER_MQTT 0
+#define WIZARD_MQTT_DEVICE_ID ""
 #define WIZARD_MQTT_URL ""
 
 #define WIZARD_ENABLE_SNTP 0  // Enable time sync.
@@ -79,6 +81,15 @@ void mongoose_set_auth_handler(int (*fn)(const char *user, const char *pass));
 
 void mongoose_add_custom_handler(const char *url_pattern, mg_event_handler_t,
                                  int read_level, int write_level);
+
+struct mongoose_wifi_handlers {
+  void (*on_connect_fn)(struct mg_tcpip_if *);
+  void (*on_disconnect_fn)(struct mg_tcpip_if *);
+  void (*on_connect_error_fn)(struct mg_tcpip_if *);
+  void (*on_scan_result_fn)(struct mg_tcpip_if *, struct mg_wifi_scan_bss_data *);
+  void (*on_scan_end_fn)(struct mg_tcpip_if *);
+};
+void mongoose_set_wifi_handlers(struct mongoose_wifi_handlers *);
 
 #if WIZARD_ENABLE_MQTT
 void glue_lock_init(void);  // Initialise global Mongoose mutex
@@ -185,6 +196,59 @@ bool glue_check_scannetworks(void);  // Check if action is still in progress
 
 void glue_start_save_event(struct mg_str);  // Start an action
 bool glue_check_save_event(void);  // Check if action is still in progress
+
+struct proto_stats_ip {
+  int lenerr;
+  int chkerr;
+  int drop;
+  int fw;
+  int rx;
+  int tx;
+};
+void glue_get_proto_stats_ip(struct proto_stats_ip *);
+void glue_set_proto_stats_ip(struct proto_stats_ip *);
+
+struct proto_stats_tcp {
+  int lenerr;
+  int chkerr;
+  int drop;
+  int fw;
+  int rx;
+  int tx;
+};
+void glue_get_proto_stats_tcp(struct proto_stats_tcp *);
+void glue_set_proto_stats_tcp(struct proto_stats_tcp *);
+
+struct proto_stats_udp {
+  int lenerr;
+  int chkerr;
+  int drop;
+  int fw;
+  int rx;
+  int tx;
+};
+void glue_get_proto_stats_udp(struct proto_stats_udp *);
+void glue_set_proto_stats_udp(struct proto_stats_udp *);
+
+struct proto_stats_icmp {
+  int chkerr;
+  int lenerr;
+  int drop;
+  int fw;
+  int rx;
+  int tx;
+};
+void glue_get_proto_stats_icmp(struct proto_stats_icmp *);
+void glue_set_proto_stats_icmp(struct proto_stats_icmp *);
+
+struct napt_stats {
+  int forced_evictions_no;
+  int active_icmp_conn;
+  int active_udp_conn;
+  int active_tcp_conn;
+};
+void glue_get_napt_stats(struct napt_stats *);
+void glue_set_napt_stats(struct napt_stats *);
 
 void glue_reply_events(struct mg_connection *, struct mg_http_message *);
 

@@ -93,6 +93,46 @@ void glue_start_save_event(struct mg_str params) {
   s_action_timeout_save_event = mg_now() + 1000; // Start save_event, finish after 1 second
 }
 
+static struct proto_stats_ip s_proto_stats_ip = {0, 0, 0, 0, 0, 0};
+void glue_get_proto_stats_ip(struct proto_stats_ip *data) {
+  *data = s_proto_stats_ip;  // Sync with your device
+}
+void glue_set_proto_stats_ip(struct proto_stats_ip *data) {
+  s_proto_stats_ip = *data; // Sync with your device
+}
+
+static struct proto_stats_tcp s_proto_stats_tcp = {0, 0, 0, 0, 0, 0};
+void glue_get_proto_stats_tcp(struct proto_stats_tcp *data) {
+  *data = s_proto_stats_tcp;  // Sync with your device
+}
+void glue_set_proto_stats_tcp(struct proto_stats_tcp *data) {
+  s_proto_stats_tcp = *data; // Sync with your device
+}
+
+static struct proto_stats_udp s_proto_stats_udp = {0, 0, 0, 0, 0, 0};
+void glue_get_proto_stats_udp(struct proto_stats_udp *data) {
+  *data = s_proto_stats_udp;  // Sync with your device
+}
+void glue_set_proto_stats_udp(struct proto_stats_udp *data) {
+  s_proto_stats_udp = *data; // Sync with your device
+}
+
+static struct proto_stats_icmp s_proto_stats_icmp = {0, 0, 0, 0, 0, 0};
+void glue_get_proto_stats_icmp(struct proto_stats_icmp *data) {
+  *data = s_proto_stats_icmp;  // Sync with your device
+}
+void glue_set_proto_stats_icmp(struct proto_stats_icmp *data) {
+  s_proto_stats_icmp = *data; // Sync with your device
+}
+
+static struct napt_stats s_napt_stats = {0, 0, 0, 0};
+void glue_get_napt_stats(struct napt_stats *data) {
+  *data = s_napt_stats;  // Sync with your device
+}
+void glue_set_napt_stats(struct napt_stats *data) {
+  s_napt_stats = *data; // Sync with your device
+}
+
 void glue_reply_events(struct mg_connection *c, struct mg_http_message *hm) {
   const char *headers = "Cache-Control: no-cache\r\n" "Content-Type: application/json\r\n";
   const char *value = "[{\"id\":0,\"timestamp\":12345,\"message\":\"Something failed\",\"priority\":2,\"status\":\"active\",\"notes\":\"some notes\"},{\"id\":1,\"timestamp\":12395,\"message\":\"Something succeeded\",\"priority\":1,\"status\":\"processed\",\"notes\":\"\"}]";
